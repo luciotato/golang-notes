@@ -1,0 +1,146 @@
+#Golang concepts from an OOP point of view
+
+##Objective
+
+The objective of this document is to ease golang concepts learning, by associate
+golang *words* with previously known concepts, in the OOP field.
+
+This is a discovery process, I'm writing this document to help my self to understand golang
+and maybe help others.
+
+##Introduction
+Golang introduce old words with a new golang-specific meanining. This is not bad, 
+but sometimes is good to have a "translation" available to be able to recognize
+when a golang-specific concept is ***new*** and when it is a variation of an old one.
+
+This is important in order to *understand* concepts of a new language, 
+if you can *translate* a golang-word to previously known concepts, 
+the learning is by far easier.
+
+##Old words with a new golang-specific meanining
+
+You have in golang
+* ***interface***
+* ***struct***
+* ***receivers***
+
+##golang-struct
+
+A golang-struct is a *class* with *fields*. i.e.: *class square*:
+
+	package main
+	
+	import . "fmt"
+	
+	type Rectangle struct {
+		Name          string
+		Width, Height float64
+	}
+	
+	func main() {
+	
+		var a Rectangle
+		var b = Rectangle{"I'm b.", 10, 20}
+		var c = Rectangle{Height: 12, Width: 14}
+	
+		Println(a)
+		Println(b)
+		Println(c)
+	}
+
+  =>
+  { 0 0}
+  {I'm b. 10 20}
+  { 14 12}
+  
+- There is a *zero-value* defined for each core-type, so if you do not provide values at instantiation, 
+all fields will have the zero-value
+
+- No specific in-class constructors. There is a *generic constructor* for any class instance, 
+receiving a generic literal in a JSON-like format and using reflection to create instances of any class.
+
+    // generic constructor: pseudo-code, recursive
+    function construct ( class,  literal) returns class-instance {
+
+          helper function assign ( object, literal) {  //recursive
+            if type-of object is "object"
+                for each field in object.fields
+                    if literal has-field field.name 
+                        assign(field.value,  literal[field.name].value) //recurse
+            else
+                set object.value = literal.value
+          }
+
+     // generic constructor main body
+     set class-instance = new class
+     assign class-instance, literal
+    }
+    
+##golang "struct composition"
+
+"struct composition" is:
+1) multiple inheritance
+2) normal composition, when a field in your class-A has type:class-B
+
+Both forms have *similar syntax*. 
+*multiple inheritance* is achieved in golang by including a field in a struct *named as other class*. 
+*classic composition* is achieved as usual, having a field of a class type.  e.g.
+
+  type Named struct {
+  	Name      string
+  }
+
+  type Shape struct {
+  	color     int32
+  	isRegular bool
+  }
+  
+  type Point struct {
+  	x,y float64
+  }
+
+  type Rectangle struct {
+  	Named              //inheritance
+  	Shape              //inheritance
+  	center Point       //composition
+  	Width, Height float64
+  }
+
+This can be read: (pseudo code)
+
+  class Named
+     field Name: string
+
+  class Shape
+     field color: int32
+     field isRegular: bool
+     
+  class Rectangle
+     inherits Named
+     inherits Shape
+     field center: Point
+     field Width: float64
+     field Height: float64
+
+##accessing super classes
+
+Since we're using class-name for inheritance, the class-name becomes the field-name in the inherited class.
+So in: 
+
+  var a Rectangle
+  
+*a.Name*, a.Named.Name are the same field
+
+If you hace a method "show" for example in *class Named* and also
+
+golang "struct composition"
+
+
+##golang-Interface
+
+A golang-Interface is a class with no attributes/fields and where all the methods are abstract.
+Given the above definition, you can only *inherit* a golang-interface and never instantiate one.
+
+
+
+
