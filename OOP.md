@@ -229,13 +229,12 @@ Using it:
 
 ##Golang Interfaces
 
-A ***golang-Interface*** is ***class with no fields and only abstract methods***.
+A ***golang-Interface*** is ***a class with no fields and only abstract methods***.
 Given this definition, you can use an interface to:
 
+- Declare a var or parameter of type *interface*.
 - *implement* an interface, by declaring all the *interface abstract methods* in a *concrete class (a struct)*
 - *inherit(embed)* a golang-interface into another golang-interface
-
-- Declare a var or parameter of type *interface*.
 
 ###Declare a var/parameter with type interface
 
