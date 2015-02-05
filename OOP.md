@@ -254,8 +254,6 @@ When you declare a var/parameter with type interface:
 
 Note: The *ITables* used for method dispatch are constructed dynamically as needed and cached. Each *class(struct)* has one ITable for each *Interface* the *class(struct) implements*, so, if all *classes(structs)* implement all interfaces, there's a *ITable* for each *class(struct)*-*Interface* combination. See: [Go Data Structures: Interfaces](http://research.swtch.com/interfaces)
 
-Note: I'm writing a [low-level detail of what happens when you use interface vars](low-level-interface.md). Help is appreciated.
-
 ####Examples from [How to use interfaces in Go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go) with commented pseudo-code
 
     package main
