@@ -5,11 +5,15 @@
 The objective of this document is to ease golang learning by associating
 golang-specific *concepts* with previously known concepts in the OOP field.
 
-This is a discovery process, I'm writing this document to help myself understanding golang and maybe help others.
-
 ***The objective of this document is to promote golang usage*** by easing language understanding for people coming from a heavy OOP background
 
-##Introduction
+This is a discovery process, I'm writing this document to help myself understanding golang and maybe help others. 
+
+This is a work in progress, this document is published in github because ***I'm expecting pull requests from people with a better understanding of golang internals.***
+
+I'm just starting to analyze golang, this is Version 0.0.0-aplha of this document, so there are a lot of tihngs to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
+
+##Golang Concepts
 Golang introduce words with a new golang-specific meaning, as *struct* and *interface*.  
 This is not bad, but sometimes is nice to have a "translation" available to be able to understand golang-concepts by relating them to previously known concepts.
 
@@ -17,15 +21,9 @@ This is important in order to *understand* concepts of a new language,
 if you can *translate* a golang-word to previously known concepts, 
 the learning is by far easier.
 
-##Why
-
-This is a discovery process. I'm just starting to analyze golang. 
-
-This is a work in progress, this document is published in github because ***I'm expecting pull requests from people with a better understanding of golang internals.***
-
 ##Cheat Sheet
 
-|golang concept|OOP concept|
+|golang|classic OOP concept|
 |-----|-----|
 |*struct*|*class*
 |*embedding*|*multiple inheritance*
@@ -36,10 +34,10 @@ This is a work in progress, this document is published in github because ***I'm 
 
 A ***golang-struct*** is a ***class*** with ***fields***. e.g.:
 
-  type Rectangle struct {
-    Name          string
-    Width, Height float64
-  }
+    type Rectangle struct {
+      Name          string
+      Width, Height float64
+    }
   
 This can be read as (pseudo code):
 
@@ -102,7 +100,7 @@ Example:
 
 ***multiple inheritance*** is achieved in golang by *embedding* a field ***named as other class*** inside a struct. 
 
-Note: The official documents call it "an annonymous field", but this add to confusion, since the field *has a name*: the inherited class-name, and can be accessed by dot notation.
+Note: The official documents call it "an annonymous field", but this add to confusion, since ***the embedded field has a name***, the inherited class-name, and can be accessed by dot notation.
 
     type NamedObj struct {
       Name      string
@@ -144,9 +142,9 @@ This can be read: (pseudo code)
   
 Since we're using class-named-fields for inheritance, we can use the field to access the base-class. So in `aRect`: 
 
-***aRect.Name*** and ***aRect.NamedObj.Name*** refer to the same field
+ - `aRect.Name` and `aRect.NamedObj.Name` refer to the same field
 
-***aRect.color*** and ***aRect.Shape.color*** refer to the same field
+ - `aRect.color` and `aRect.Shape.color` refer to the same field
 
 ###Method overriding
 
@@ -229,7 +227,7 @@ Using it:
     - I'm a Rectangle named Richard
 
 
-##a golang-Interface is an *class with no fields and only abstract methods*
+##Golang Interfaces
 
 A ***golang-Interface*** is ***class with no fields and only abstract methods***.
 Given this definition, you can use an interface to:
@@ -254,7 +252,7 @@ When you declare a var/parameter with type interface:
   - You can call the function with any class implementing the interface
   - The function works for every class implementing the interface (polymorphic)
 
-Note: The *ITables* used for method dispatch are constructed dynamically as needed and cached. Each *class(struct)* has one ITable for each *Interface* the *class(struct) implements*), so, if all *classes(structs)* implement all interfaces, there's a *ITable* for each *class(struct)*-*Interface* combination. See: [Go Data Structures: Interfaces](http://research.swtch.com/interfaces)
+Note: The *ITables* used for method dispatch are constructed dynamically as needed and cached. Each *class(struct)* has one ITable for each *Interface* the *class(struct) implements*, so, if all *classes(structs)* implement all interfaces, there's a *ITable* for each *class(struct)*-*Interface* combination. See: [Go Data Structures: Interfaces](http://research.swtch.com/interfaces)
 
 Note: I'm writing a [low-level detail of what happens when you use interface vars](low-level-interface.md). Help is appreciated.
 
@@ -327,12 +325,12 @@ By picturing an ***Interface*** as a ***class with no fields and only abstract m
 
 ***Interface{}*** in golang is a ***class with no fields and no methods***
 
-What can you do with a `var Interface{}`? Well, initialy, nothing.
+What can you do with a `var x Interface{}`? Well, initialy, nothing.
 
 But, since by definition all *classes(structs)* implement *Interface{}* it means
-that a `var Interface{}` ***can hold any value***
+that a `var x Interface{}` ***can hold any value***
 
-To actually use the *value* inside a `var Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch) a *type assertion* or *reflection* 
+To actually use the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch) a *type assertion* or *reflection* 
 
 ##To be continued...
 
