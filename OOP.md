@@ -126,7 +126,7 @@ Note: The official documents call it "an annonymous field", but this add to conf
 
 This can be read: (pseudo code)
 
-    class Named
+    class NamedObj
        field Name: string
   
     class Shape
@@ -134,47 +134,45 @@ This can be read: (pseudo code)
        field isRegular: bool
        
     class Rectangle
-       inherits Named
+       inherits NamedObj
        inherits Shape
        field center: Point
        field Width: float64
        field Height: float64
   
-###accessing super classes
-
-Since we're using class-named-fields for inheritance, we can use the field to access the base-class. So in: 
-
-    var a Rectangle
+    var aRect Rectangle
   
-***a.Name*** and ***a.Named.Name*** refer to the same field
+Since we're using class-named-fields for inheritance, we can use the field to access the base-class. So in `aRect`: 
 
-***a.color*** and ***a.Shape.color*** refer to the same field
+***aRect.Name*** and ***aRect.NamedObj.Name*** refer to the same field
 
-###method overriding
+***aRect.color*** and ***aRect.Shape.color*** refer to the same field
+
+###Method overriding
 
 If you have a ***method show()*** for example in ***class Named*** and also define a ***method show()*** in ***class Rectangle***,
 ***Rectangle_show()*** will override ***Named_Show()***
 
-You can use the ***inherited class-name-as-field*** to access the base implementation via dot-notation, e.g.:
+As with base class fields, you can use the ***inherited class-name-as-field*** to access the base implementation via dot-notation, e.g.:
 
     a.show()        // calls a.Rectangle_show()
     a.Named.show()  // calls a.Named_show(), base implementation
 
 
-###multiple inheritance and the diamond problem
+###Multiple inheritance and The Diamond Problem
 
 Golang solves [the diamond problem](https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem) by *not allowing diamonds*.
 
-Since ***inheritance (embedded fields)*** include inherited field names in the ***inheriting class (struct)***, all *embedded* class-field-names *cannot collide*. You must rename fields if there is a name collision. This rule avoids the diamond problem, by not allowing it.
+Since ***inheritance (embedded fields)*** include inherited field names in the ***inheriting class (struct)***, all *embedded* class-field-names *should not collide*. You must rename fields if there is a name collision. This rule avoids the diamond problem, by not allowing it.
 
-##golang *methods* and ***"receivers" (this)***
+##Golang *methods* and ***"receivers" (this)***
 
-A golang ***method*** is the same as an ***OOP method*** but:
+A golang ***method*** is the same as a ***class method*** but:
 
-- It is defined *outside* of the ***class(struct)** body
-- Since it is outside the class, it has an *extra section* before the method name to define the ***receiver (this)***. 
-- The extra section defines ***this*** as an ***explicit parameter*** (*this* is implicit in most OOP languages).
-- Since there is such a special section to define ***this(receiver)***, you can also change the ***name*** of *this*. Idiomatic golang is to use a short var name with the class initials. e.g.
+- It is defined *outside* of the ***class(struct)*** body
+- Since it is outside the class, it has an *extra section* before the method name to define the ***"receiver" (this)***. 
+- The extra section defines ***this*** as an ***explicit parameter*** (The ***this/self*** parameter is implicit in most OOP languages).
+- Since there is such a special section to define ***this (receiver)***, you can also select a ***name*** for ***this/self***. Idiomatic golang is to use a short var name with the class initials. e.g.
 
       type NamedObj struct {
         Name      string
