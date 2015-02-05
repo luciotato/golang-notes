@@ -104,7 +104,7 @@ Example:
 
 Note: The official documents call it "an annonymous field", but this add to confusion, since the field *has a name*: the inherited class-name, and can be accessed by dot notation.
 
-    type Named struct {
+    type NamedObj struct {
       Name      string
     }
   
@@ -118,7 +118,7 @@ Note: The official documents call it "an annonymous field", but this add to conf
     }
   
     type Rectangle struct {
-      Named              //inheritance
+      NamedObj           //inheritance
       Shape              //inheritance
       center Point       //standard composition
       Width, Height float64
@@ -150,13 +150,13 @@ Since we're using class-named-fields for inheritance, we can use the field to ac
 
 ###Method overriding
 
-If you have a ***method show()*** for example in ***class Named*** and also define a ***method show()*** in ***class Rectangle***,
-***Rectangle_show()*** will override ***Named_Show()***
+If you have a ***method show()*** for example in ***class NamedObj*** and also define a ***method show()*** in ***class Rectangle***,
+***Rectangle_show()*** will override ***NamedObj_Show()***
 
 As with base class fields, you can use the ***inherited class-name-as-field*** to access the base implementation via dot-notation, e.g.:
 
-    a.show()        // calls a.Rectangle_show()
-    a.Named.show()  // calls a.Named_show(), base implementation
+    a.show()          // calls a.Rectangle_show()
+    a.NamedObj.show() // calls a.NamedObj_show(), the base implementation
 
 
 ###Multiple inheritance and The Diamond Problem
@@ -172,25 +172,29 @@ A golang ***method*** is the same as a ***class method*** but:
 - It is defined *outside* of the ***class(struct)*** body
 - Since it is outside the class, it has an *extra section* before the method name to define the ***"receiver" (this)***. 
 - The extra section defines ***this*** as an ***explicit parameter*** (The ***this/self*** parameter is implicit in most OOP languages).
-- Since there is such a special section to define ***this (receiver)***, you can also select a ***name*** for ***this/self***. Idiomatic golang is to use a short var name with the class initials. e.g.
+- Since there is such a special section to define ***this (receiver)***, you can also select a ***name*** for ***this/self***. Idiomatic golang is to use a short var name with the class initials. e.g.:
 
-      type NamedObj struct {
-        Name      string
-      }
-      //method show
-      func (n NamedObj) show() {
-        Println(n.Name)  // "n" is "this"
-      }
-    
-      type Rectangle struct {
-        NamedObj              //inheritance
-        Width, Height float64
-      }
-      //override method show
-      func (r Rectangle) show() {
-        Println("Rectangle ",r.name)  // "r" is "this"
-      }
-    
+Example
+
+        //class NamedObj
+        type NamedObj struct {
+          Name      string
+        }
+        //method show
+        func (n NamedObj) show() {
+          Println(n.Name)  // "n" is "this"
+        }
+      
+        //class Rectangle
+        type Rectangle struct {
+          NamedObj              //inheritance
+          Width, Height float64
+        }
+        //override method show
+        func (r Rectangle) show() {
+          Println("Rectangle ",r.name)  // "r" is "this"
+        }
+
   Pseudo-code:
   
       class NamedObj
@@ -206,7 +210,7 @@ A golang ***method*** is the same as a ***class method*** but:
     
          method show //override
            print "Rectangle", this.Name
-    
+
 Using it:
 
     func main() {
@@ -219,19 +223,19 @@ Using it:
   
     }
 
-  =>
-  Hello I'm Joe
-  Hello I'm Richard
-  - I'm a Rectangle named Richard
+    =>
+    Hello I'm Joe
+    Hello I'm Richard
+    - I'm a Rectangle named Richard
 
 
 ##a golang-Interface is an *class with no fields and only abstract methods*
 
 A ***golang-Interface*** is ***class with no fields and only abstract methods***.
-Given the above definition, you can use an interface to:
+Given this definition, you can use an interface to:
 
+- *implement* an interface, by declaring all the *interface abstract methods* in a *concrete class (a struct)*
 - *inherit(embed)* a golang-interface into another golang-interface
-- *implement* and interface, by declaring all the *interface abstract methods* in a *concrete class (a struct)*
 
 - Declare a var or parameter of type *interface*.
 
@@ -245,14 +249,14 @@ When you declare a var/parameter with type interface:
 
 - The var/parameter do not have fields
 - The var/parameter has *a defined set of methods*
-- For parameters: 
+- When you call a method of the var/parameter, a *concrete method* is called via *method dispatch* from a jmp-table. 
+- When used as parameter type: 
   - You can call the function with any class implementing the interface
   - The function works for every class implementing the interface (polymorphic)
-- When you call a method of the var/parameter, a *concrete method* is called via *method dispatch* from a jmp-table. 
 
 Note: The *ITables* used for method dispatch are constructed dynamically as needed and cached. Each *class(struct)* has one ITable for each *Interface* the *class(struct) implements*), so, if all *classes(structs)* implement all interfaces, there's a *ITable* for each *class(struct)*-*Interface* combination. See: [Go Data Structures: Interfaces](http://research.swtch.com/interfaces)
 
-Note: I'm writing a [low-level detail of what happens when you use interface vars](low-level-interface). Help is appreciated.
+Note: I'm writing a [low-level detail of what happens when you use interface vars](low-level-interface.md). Help is appreciated.
 
 ####Examples from [How to use interfaces in Go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go) with commented pseudo-code
 
@@ -330,10 +334,12 @@ that a `var Interface{}` ***can hold any value***
 
 To actually use the *value* inside a `var Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch) a *type assertion* or *reflection* 
 
-[Type Switch Internals]
-
-
 ##To be continued...
+
+Drafts: 
+ [Type Switch Internals](Type Switch Internals.md)
+
+
 
 
 
