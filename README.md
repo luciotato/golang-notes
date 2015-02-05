@@ -1,2 +1,2 @@
-# golang-notes
-Notes to understand golang
+[Start here](OOP.md)
+
