@@ -1,17 +1,17 @@
 #Golang concepts from an OOP point of view
 
-##Objective
+##Introduction
 
-The objective of this document is to ease golang learning by associating
+###Objectives of this document
+
+* Ease golang learning by associating
 golang-specific *concepts* with previously known concepts in the OOP field.
 
-***The objective of this document is to promote golang usage*** by easing language understanding for people coming from a heavy OOP background
+* ***Promote golang usage*** by easing language understanding for people coming from a heavy OOP background
 
+###Why github?
 This is a discovery process, I'm writing this document to help myself understanding golang and maybe help others. 
-
-This is a work in progress, this document is published in github because ***I'm expecting pull requests from people with a better understanding of golang internals.***
-
-I'm just starting to analyze golang, this is Version 0.0.0-aplha of this document, so there are a lot of tihngs to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
+This document is published in github because ***I'm expecting pull requests from people with a better understanding of golang internals.*** There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
 
 ##Golang Concepts
 Golang introduce words with a new golang-specific meaning, as *struct* and *interface*.  
