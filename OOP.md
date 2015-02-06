@@ -25,10 +25,10 @@ the learning is by far easier.
 
 |golang|classic OOP concept|
 |-----|-----|
-|*struct*|*class*
+|*struct*|*class with fields and only non-virtual methods*
+|*interface*|*class without fields and only virtual methods*
 |*embedding*|*multiple inheritance*
 |*receiver*|*this*
-|*interface*|*class with no fields and only abstract methods*
 
 ##golang-struct
 
