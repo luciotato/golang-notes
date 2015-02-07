@@ -23,30 +23,34 @@ the learning is by far easier.
 
 ##Cheat Sheet
 
-|golang|classic OOP concept|
-|-----|-----|
-|*struct*|*class with fields and only non-virtual methods*
-|*interface*|*class without fields and only virtual methods*
-|*embedding*|*multiple inheritance*
-|*receiver*|*this*
+|Golang|Classic OOP
+|----|-----|
+|*struct*|class  with fields      only non-virtual methods
+|*interface*|class without fields only virtual methods
+|*embedding*|multiple inheritance AND composition
+|*receiver*|implict *this* parameter
 
-##golang-struct
+##Golang-struct is a class (non-virtual)
 
-A ***golang-struct*** is a ***class*** with ***fields***. e.g.:
+A ***golang-struct*** is a ***class*** with ***fields*** where all the methods are ***non-virtual***. e.g.:
 
     type Rectangle struct {
       Name          string
       Width, Height float64
     }
-  
+    func (r Rectangle) Area() float64{
+      return r.Width * r.Height
+    }
 This can be read as (pseudo code):
 
     class Rectangle
       field name: string
       field Width: float64
       field Height: float64
+      method Area() //non-virtual
+         return this.Width * this.Height
 
-***Notes:***
+###Constructor
   
 - There is a *zero-value* defined for each core-type, so if you do not provide values at instantiation, all fields will have the zero-value
 
@@ -70,7 +74,7 @@ This can be read as (pseudo code):
         assign class-instance, literal
     
     
-Example:
+Constructors example:
 
     package main
     import . "fmt"
@@ -96,11 +100,11 @@ Example:
     {I'm b. 10 20}
     { 14 12}
 
-##golang "embedded field" is ***multiple inheritance***
+##Golang "embedded field" is ***multiple inheritance***
 
-***multiple inheritance*** is achieved in golang by *embedding* a field ***named as other class*** inside a struct. 
+***multiple inheritance*** is achieved in golang by *embedding* a field ***named as other class(struct)*** inside a struct. 
 
-Note: The official documents call it "an annonymous field", but this add to confusion, since ***the embedded field has a name***, the inherited class-name, and can be accessed by dot notation.
+Note: The official documents call it "an anonymous field", but this add to confusion, since ***the embedded field has a name***: the inherited class-name, and can be accessed by dot notation.
 
     type NamedObj struct {
       Name      string
@@ -117,7 +121,7 @@ Note: The official documents call it "an annonymous field", but this add to conf
   
     type Rectangle struct {
       NamedObj           //inheritance
-      Shape              //inheritance
+      Shape              //multiple inheritance
       center Point       //standard composition
       Width, Height float64
     }
@@ -138,20 +142,27 @@ This can be read: (pseudo code)
        field Width: float64
        field Height: float64
   
-    var aRect Rectangle
-  
-Since we're using class-named-fields for inheritance, we can use the field to access the base-class. So in `aRect`: 
+     
+In Golang, you use class(struct)-named-fields for inheritance. So we can use the inherited class-name as field-name to access the base-class. 
+
+Example: 
+
+   In `var aRect Rectangle`:
 
  - `aRect.Name` and `aRect.NamedObj.Name` refer to the same field
 
  - `aRect.color` and `aRect.Shape.color` refer to the same field
 
-###Method overriding
+###Method Shadowing
 
-If you have a ***method show()*** for example in ***class NamedObj*** and also define a ***method show()*** in ***class Rectangle***,
-***Rectangle_show()*** will override ***NamedObj_Show()***
+Since all ***golang-struct*** methods are ***non-virtual***, ***you cannot override methods*** (you need *interfaces* for that)
+
+If you have a ***method show()*** for example in ***class/struct NamedObj*** and also define a ***method show()*** in ***class/struct Rectangle***,
+***Rectangle_show()*** will ***SHADOW/HIDE*** the parent's class ***NamedObj_Show()***
 
 As with base class fields, you can use the ***inherited class-name-as-field*** to access the base implementation via dot-notation, e.g.:
+
+    var a Rectangle
 
     a.show()          // calls a.Rectangle_show()
     a.NamedObj.show() // calls a.NamedObj_show(), the base implementation
@@ -163,9 +174,11 @@ Golang solves [the diamond problem](https://en.wikipedia.org/wiki/Multiple_inher
 
 Since ***inheritance (embedded fields)*** include inherited field names in the ***inheriting class (struct)***, all *embedded* class-field-names *should not collide*. You must rename fields if there is a name collision. This rule avoids the diamond problem, by not allowing it.
 
+Note: Golang allows you to create a "Diamond" inheritance diagram, and only will complain when you try to access a parent's class field ambiguously.
+
 ##Golang *methods* and ***"receivers" (this)***
 
-A golang ***method*** is the same as a ***class method*** but:
+A golang ***struct-method*** is the same as a ***class non-virtual method*** but:
 
 - It is defined *outside* of the ***class(struct)*** body
 - Since it is outside the class, it has an *extra section* before the method name to define the ***"receiver" (this)***. 
@@ -227,33 +240,47 @@ Using it:
     - I'm a Rectangle named Richard
 
 
-##Golang Interfaces
+##Structs vs Interfaces 
 
-A ***golang-Interface*** is ***a class with no fields and only abstract methods***.
+A ***golang-Interface*** is ***a class with no fields and ONLY VIRTUAL methods***.
+
+The definition of *interface* in Golang is designed tom complement the *structs*. This is a very important "symbiotic" relationship in golang. *Interfaces* fits perfectly with *structs*. 
+
+You have in Golang:
+>***Structs:  *** classes, with fields, ALL NON-VIRTUAL methods
+>***Interfaces:  *** classes, with NO fields, ALL VIRTUAL methods
+
+By restricting *structs* to non-virtual methods, and  restricting *interfaces* to *all-virtual* methods and no fields. Both elements can be perfectly combined by *embedding* to create *fast* polymorphism and multiple inheritance *without the problems associated to multiple inheritance in classical OOP*
+
+##Interfaces
+
+A *golang-Interface* is a ***class, with NO fields, and ALL VIRTUAL methods***
+
 Given this definition, you can use an interface to:
 
 - Declare a var or parameter of type *interface*.
-- *implement* an interface, by declaring all the *interface abstract methods* in a *concrete class (a struct)*
+- *implement* an interface, by declaring all the *interface virtual methods* in a *concrete class (a struct)*
 - *inherit(embed)* a golang-interface into another golang-interface
 
 ###Declare a var/parameter with type interface
 
-By picturing an ***Interface*** as a ***class with no fields and only abstract methods***, you can understand the advantages and limitations of *Interfaces*
+By picturing an ***Interface*** as a ***class with no fields and only virtual abstract methods***, you can understand the advantages and limitations of *Interfaces*
 
 By declaring a var/parameter with type *interface* you define the set of valid methods for the var/parameter. This allows you to use a form of ***polymorphism*** via ***method dispatch***
 
 When you declare a var/parameter with type interface:
 
-- The var/parameter do not have fields
+- The var/parameter has no fields
 - The var/parameter has *a defined set of methods*
-- When you call a method of the var/parameter, a *concrete method* is called via *method dispatch* from a jmp-table. 
-- When used as parameter type: 
-  - You can call the function with any class implementing the interface
-  - The function works for every class implementing the interface (polymorphic)
+- When you call a method on the var/parameter, a *concrete method* is called via *method dispatch* from a jmp-table. (polymorphism via method dispatch)
+- When the interface is used as a parameter type: 
+  - You can call the function with *any class* implementing the interface
+  - The function works for *every class* implementing the interface (the function is polymorphic)
 
-Note: The *ITables* used for method dispatch are constructed dynamically as needed and cached. Each *class(struct)* has one ITable for each *Interface* the *class(struct) implements*, so, if all *classes(structs)* implement all interfaces, there's a *ITable* for each *class(struct)*-*Interface* combination. See: [Go Data Structures: Interfaces](http://research.swtch.com/interfaces)
 
-####Examples from [How to use interfaces in Go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go) with commented pseudo-code
+*Note on golan implementation*: The *ITables* used for method dispatch are constructed dynamically as needed and cached. Each *class(struct)* has one ITable for each *Interface* the *class(struct) implements*, so, if all *classes(structs)* implement all interfaces, there's a *ITable* for each *class(struct)*-*Interface* combination. See: [Go Data Structures: Interfaces](http://research.swtch.com/interfaces)
+
+####Examples from [How to use interfaces in Go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go) , with commented pseudo-code
 
     package main
     
@@ -263,7 +290,7 @@ Note: The *ITables* used for method dispatch are constructed dynamically as need
     
     /*
     class Animal
-       abstract Speak() string
+       virtual abstract Speak() string
     */
     type Animal interface {
       Speak() string
@@ -271,7 +298,7 @@ Note: The *ITables* used for method dispatch are constructed dynamically as need
     
     /*
     class Dog
-      method Speak() string
+      method Speak() string //non-virtual
          return "Woof!"
     */       
     type Dog struct {
@@ -282,7 +309,7 @@ Note: The *ITables* used for method dispatch are constructed dynamically as need
     
     /*
     class Cat
-      method Speak() string
+      method Speak() string //non-virtual
          return "Meow!"
     */       
     type Cat struct {
@@ -293,7 +320,7 @@ Note: The *ITables* used for method dispatch are constructed dynamically as need
     
     /*
     class Llama
-      method Speak() string
+      method Speak() string //non-virtual
          return "LaLLamamQueLLama!"
     */       
     type Llama struct {
@@ -318,23 +345,18 @@ Note: The *ITables* used for method dispatch are constructed dynamically as need
 
 ###The empty Interface
 
-By picturing an ***Interface*** as a ***class with no fields and only abstract methods***, you can understand ***what is the golang empty interface: "Interface{}"***.
+By picturing an ***Interface*** as a ***class with no fields and only virtual abstract methods***, you can understand ***what is*** the golang ***Empty Interface: "Interface{}"***.
 
 ***Interface{}*** in golang is a ***class with no fields and no methods***
 
 What can you do with a `var x Interface{}`? Well, initialy, nothing.
 
-But, since by definition all *classes(structs)* implement *Interface{}* it means
+But, since by definition all *classes(structs)* implement ***Interface{}*** it means
 that a `var x Interface{}` ***can hold any value***
 
-To actually use the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch) a *type assertion* or *reflection* 
+***To actually use** the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch) a *type assertion* or *reflection* 
 
 ##To be continued...
 
 Drafts: 
  [Type Switch Internals](Type Switch Internals.md)
-
-
-
-
-
