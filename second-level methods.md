@@ -51,10 +51,7 @@ Example, using structs-inheritance by embedding:
 Here `func Simple` is a first-level method (do not call other struct methods)
 and `func Complex` is a second-level method (do call other struct methods)
 
-Since all the inheritance hierarchy is made by embedding structs, the problem with 2nd level methods
-is that they're called in the base/parent-class context, so line 4, where you might expect see 
-"child simple called" is really "parent simple called". This is correct behavior for structs,
-because all struct-method calls are non-virtual and resolved at compile time.
+Since all the inheritance hierarchy is made by embedding structs, the problem with 2nd level methods is that they're called in the base/parent-class context, so output line 4, where you might expect see  "child simple called" is really "parent simple called". This is correct behavior for structs, because all struct-method calls are non-virtual and resolved at compile time.
 
 
 Now the example, but using interfaces:
@@ -107,14 +104,10 @@ Now the example, but using interfaces:
 Here `func Simple` is a first-level method (do not call other struct methods)
 and `func Complex` is a second-level method (do call other *interface* methods)
 
-Since all the inheritance hierarchy is made by *interfaces*, the advantage with 2nd level methods
-is that they're called in *by method dispach*, so line 4 has "child simple called". 
-This is correct behavior for *interfaces* because all interface-method calls 
-are virtual so they're resolved *at run time*. 
+Since the inheritance hierarchy of `func simple` and `func complex`is made with an *interface*, the advantage with 2nd level methods
+is that they're called *by method dispatch*, so output line 4 has "child simple called".  This is correct behavior for *interfaces* because all interface-method calls are virtual so they're resolved *at run time*. 
 
-In the first call to 2nd-level `func complex`, internall call `simple` resolved to Parent_simple.
-In the second call to `func complex`, internall call `simple` resolved to Child_simple.
-That's because all interface-method calls are virtual so they're resolved *at run time*
+In the first call to 2nd-level `func complex`, internall call `simple` resolved to Parent_simple. In the second call to `func complex`, internall call `simple` resolved to Child_simple. That's because all interface-method calls are virtual so they're resolved *at run time*
 
 
 
