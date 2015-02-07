@@ -25,8 +25,8 @@ the learning is by far easier.
 
 |Golang|Classic OOP
 |----|-----|
-|*struct*|class  with fields and only NON-VIRTUAL methods
-|*interface*|class with NO fields and ONLY VIRTUAL methods
+|*struct*|class  with fields      only non-virtual methods
+|*interface*|class without fields only virtual methods
 |*embedding*|multiple inheritance AND composition
 |*receiver*|implict *this* parameter
 
@@ -355,6 +355,19 @@ But, since by definition all *classes(structs)* implement ***Interface{}*** it m
 that a `var x Interface{}` ***can hold any value***
 
 ***To actually use** the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch) a *type assertion* or *reflection* 
+
+## Using struct embedding
+
+When you use ***only struct embedding*** to create a multi-root hierarchy, via multiple inheritance, you must remember that *all struct methods are non-virtual*.
+
+That's why a *struct* hierarchy ***is always faster***. When no interfaces are involved, the compiler ***knows*** exactly what concrete function to call, so all calls are direct calls resolved at compile time. Also the functions can be inlined.
+
+## Using interfaces 
+
+When you use ***only interface embedding*** to create a multi-root hierarchy, via multiple inheritance, you must remember that *all interface methods are virtual*.
+
+That's why a *interface* hierarchy ***is always slower than structs***. When interfaces are involved, the compiler ***do not know*** at compile time, what concrete function to call, it depends on the concrete content of interface parameter, so all calls are ***resolved at run-time via method dispatch***. The mechanism is fast, but not as fast as compile-time resolved calls. Also a interface-method call, the concrete being unknown until run-time, cannot be inlined.
+
 
 ##To be continued...
 
