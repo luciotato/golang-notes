@@ -362,11 +362,17 @@ When you use ***only struct embedding*** to create a multi-root hierarchy, via m
 
 That's why a *struct* hierarchy ***is always faster***. When no interfaces are involved, the compiler ***knows*** exactly what concrete function to call, so all calls are direct calls resolved at compile time. Also the functions can be inlined.
 
+***The problem is with [second-level methods](second-level methods.md)***. You cannot alter the execution of a base-class second-level method, because all struct-methods are non-virtual. 
+You will inherit fields and methods, but methods are always executed on the base-class context.
+
 ## Using interfaces 
 
 When you use ***only interface embedding*** to create a multi-root hierarchy, via multiple inheritance, you must remember that *all interface methods are virtual*.
 
 That's why a *interface* hierarchy ***is always slower than structs***. When interfaces are involved, the compiler ***do not know*** at compile time, what concrete function to call, it depends on the concrete content of interface parameter, so all calls are ***resolved at run-time via method dispatch***. The mechanism is fast, but not as fast as compile-time resolved calls. Also a interface-method call, the concrete being unknown until run-time, cannot be inlined.
+
+***The advantage is with [second-level methods](second-level methods.md)***. You can alter the execution of a base-interface second-level method, because all interface-methods are virtual. 
+Since all calls are vua method-dispatch, methods are executed on the **actual instance** context.
 
 
 ##To be continued...
