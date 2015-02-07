@@ -1,9 +1,12 @@
 
-###A first-level method is a method which DO NOT CALL *other methods* in the class/struct/interface
 
-###A second-level method is a method which DO CALL *other methods* in the class/struct/interface
+A ***first-level method*** is a method which ***DO NOT CALL *other methods* in the class/struct/interface***
 
-Example:
+A ***second-level method*** is a method which ***DO CALL *other methods* in the class/struct/interface***
+
+
+
+Example, using structs-inheritance by embedding:
 
     package main
     
@@ -113,3 +116,7 @@ In the first call to 2nd-level `func complex`, internall call `simple` resolved 
 In the second call to `func complex`, internall call `simple` resolved to Child_simple.
 That's because all interface-method calls are virtual so they're resolved *at run time*
 
+
+
+
+<p align=right><small> Written with [StackEdit](https://stackedit.io/).</small>
