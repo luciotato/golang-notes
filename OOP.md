@@ -25,8 +25,8 @@ the learning is by far easier.
 
 |Golang|Classic OOP
 |----|-----|
-|*struct*|class  with fields      only non-virtual methods
-|*interface*|class without fields only virtual methods
+|*struct*|class  with fields and only NON-VIRTUAL methods
+|*interface*|class with NO fields and ONLY VIRTUAL methods
 |*embedding*|multiple inheritance AND composition
 |*receiver*|implict *this* parameter
 
