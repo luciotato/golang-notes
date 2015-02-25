@@ -4,14 +4,13 @@
 
 ###Objectives of this document
 
-* Ease golang learning by associating
-golang-specific *concepts* with previously known concepts in the OOP field.
+* Ease golang learning by associating golang-specific *concepts* with previously known concepts in the OOP field.
 
 * ***Promote golang usage*** by easing language understanding for people coming from a heavy OOP background
 
 ###Why github?
 This is a discovery process, I'm writing this document to help myself understanding golang and maybe help others. 
-This document is published in github because ***I'm expecting pull requests from people with a better understanding of golang internals.*** There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
+This document is published in github. ***Pull requests are welcomed.***. There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
 
 ##Golang Concepts
 Golang introduce words with a new golang-specific meaning, as *struct* and *interface*.  
@@ -100,30 +99,83 @@ Constructors example:
     {I'm b. 10 20}
     { 14 12}
 
-##Golang "embedded field" is ***multiple inheritance***
 
-***multiple inheritance*** is achieved in golang by *embedding* a field ***named as other class(struct)*** inside a struct. 
+##Golang "embedding" is akin to ***multiple inheritance with non-virtual methods***
 
-Note: The official documents call it "an anonymous field", but this add to confusion, since ***the embedded field has a name***: the inherited class-name, and can be accessed by dot notation.
+By *embedding* a struct into another you have a mechanism similar to ***multiple inheritance with non-virtual members***.
+
+Let's call "base" the struct embedded and "derived" the struct doing the embedding.
+
+After embedding, the base fields and methods are directly available in the derived struct. Internally a *hidden field* is created, named as the base-struct-name.
+
+Note: The official documents call it "an anonymous field", but this add to confusion, since ***internally there is an embedded field named as the embedded struct***.
+
+Base fields and methods are directly available as if they were declared in the derived struct, but *base fields and methods* **can be "shadowed"**
+
+**Shadowing** means defining another field or method *with the same name (and signature) of a *base* field or method.
+
+Once shadowed, the only way to access the base member is to use the *hidden field* named as the base-struct-name.
+ 
+    type base struct {
+        a string
+        b int
+    }
+
+    type derived struct {
+        base // embedding
+        d int
+        a float32 //-SHADOWED
+    }
+
+    func main() {
+
+      var x derived;
+
+      fmt.Println(x.a) //=> x.a, float32 (derived.a shadows base.a)
+
+      fmt.Println(x.base.a) //=> x.base.a, string (accessing shadowed member)
+
+    }
+
+All base members can be accessed via the *hidden field* named as the base-struct-name.
+
+It is important to note that all *inherited* methods **are called on the hidden-field-struct**. It means that a base method cannot see or known about derived methods or fields. Everything is non-virtual.
+
+**When working with structs and embedding, everything is STATICALLY LINKED. All references are resolved at compile time.**
+
+###Multiple embedding 
 
     type NamedObj struct {
-      Name      string
+      Name string
     }
-  
+
     type Shape struct {
+      NamedObj  //inheritance
       color     int32
       isRegular bool
     }
-    
+
     type Point struct {
-      x,y float64
+      x, y float64
     }
-  
+
     type Rectangle struct {
-      NamedObj           //inheritance
-      Shape              //multiple inheritance
-      center Point       //standard composition
+      NamedObj            //inheritance
+      Shape               //multiple inheritance
+      center        Point //standard composition
       Width, Height float64
+    }
+
+    func main() {
+
+      var aRect Rectangle = Rectangle{NamedObj{"name1"},
+        Shape{NamedObj{"name2"}, 0, true},
+        Point{0, 0},
+        20, 2.5}
+
+      fmt.Println(aRect.Name)
+      fmt.Println(aRect.Shape)
+      fmt.Println(aRect.Shape.Name)    
     }
 
 This can be read: (pseudo code)
@@ -132,6 +184,7 @@ This can be read: (pseudo code)
        field Name: string
   
     class Shape
+       inherits NamedObj
        field color: int32
        field isRegular: bool
        
@@ -143,8 +196,6 @@ This can be read: (pseudo code)
        field Height: float64
   
      
-In Golang, you use class(struct)-named-fields for inheritance. So we can use the inherited class-name as field-name to access the base-class. 
-
 Example: 
 
    In `var aRect Rectangle`:
@@ -153,20 +204,62 @@ Example:
 
  - `aRect.color` and `aRect.Shape.color` refer to the same field
 
+ - `aRect.name` and `aRect.NamedObj.name` refer to the same field, but `aRect.NamedObj.name` and `aRect.Shape.NamedObj.name` are **different fields**
+
+ - `aRect.NamedObj` and `aRect.Shape.NamedObj` are the same type, **but refer to different objects**
+
+
 ###Method Shadowing
 
 Since all ***golang-struct*** methods are ***non-virtual***, ***you cannot override methods*** (you need *interfaces* for that)
 
 If you have a ***method show()*** for example in ***class/struct NamedObj*** and also define a ***method show()*** in ***class/struct Rectangle***,
-***Rectangle_show()*** will ***SHADOW/HIDE*** the parent's class ***NamedObj_Show()***
+***Rectangle/show()*** will ***SHADOW*** the parent's class ***NamedObj/Show()***
 
 As with base class fields, you can use the ***inherited class-name-as-field*** to access the base implementation via dot-notation, e.g.:
 
-    var a Rectangle
+    type base struct {
+        a string
+        b int
+    }
 
-    a.show()          // calls a.Rectangle_show()
-    a.NamedObj.show() // calls a.NamedObj_show(), the base implementation
+    //method xyz
+    func (this base) xyz() {
+      fmt.Println("xyz, a is:", this.a)  
+    }
 
+    //method display
+    func (this base) display() {
+      fmt.Println("base, a is:",this.a)  
+    }
+
+    type derived struct {
+        base // embedding
+        d int
+        a float32 //-SHADOWED
+    }
+
+    //method display -SHADOWED
+    func (this derived) display() {
+      fmt.Println("derived a is:",this.a) 
+    }
+
+
+    func main() {
+
+      var a derived = derived{base{"base-a",10},20,2.5}
+
+      a.display()       // calls Derived/display(a)
+      // => "derived, a is: 2.5"
+      
+      a.base.display() // calls Base/display(a.base), the base implementation
+      // => "base, a is: base-a"
+
+
+      a.xyz() // "xyz" was not shadowed, calls Base/xyz(a.base)
+      // => "xyz, a is: base-a"
+
+    }
 
 ###Multiple inheritance and The Diamond Problem
 
