@@ -25,8 +25,8 @@ the learning is by far easier.
 
 |Golang|Classic OOP
 |----|-----|
-|*struct*|class  with fields      only non-virtual methods
-|*interface*|class without fields only virtual methods
+|*struct*|class  with fields, only non-virtual methods
+|*interface*|class without fields, only virtual methods
 |*embedding*|multiple inheritance AND composition
 |*receiver*|implict *this* parameter
 
@@ -56,22 +56,29 @@ This can be read as (pseudo code):
 
 - No specific in-class constructors. There is a *generic constructor* for any class instance, receiving a generic literal in a JSON-like format and using reflection to create instances of any class.
 
+pseudo-code for the generic constructor:
 
-        // generic constructor: pseudo-code, recursive
         function construct ( class,  literal) 
 
-          helper function assign ( object, literal)  //recursive
+          helper function assignFields ( object, literal)  //recursive
             if type-of object is "object"
-                for each field in object.fields
-                    if literal has-field field.name 
-                        assign(field.value,  literal[field.name].value) //recurse
+                if literal has field-names
+                    for each field in object.fields
+                        if literal has-field field.name 
+                            assignFields(field.value,  literal.fields[field.name].value) //recurse
+                else
+                //literal without names, assign by position
+                    for n=0 to object.fields.length
+                        assignFields(object.fields[n].value,  literal.fields[n].value) //recurse
             else
+                //atom type
                 set object.value = literal.value
           
 
         // generic constructor main body
-        set class-instance = new class
-        assign class-instance, literal
+        var classInstance = new class
+        assignFields(classInstance, literal)
+        return classInstance
     
     
 Constructors example:
