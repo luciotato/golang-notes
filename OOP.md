@@ -119,7 +119,7 @@ Note: The official documents call it "an anonymous field", but this add to confu
 
 Base fields and methods are directly available as if they were declared in the derived struct, but *base fields and methods* **can be "shadowed"**
 
-**Shadowing** means defining another field or method *with the same name (and signature) of a *base* field or method.
+**Shadowing** means defining another field or method *with the same name (and signature)* of a *base* field or method.
 
 Once shadowed, the only way to access the base member is to use the *hidden field* named as the base-struct-name.
  
@@ -138,9 +138,9 @@ Once shadowed, the only way to access the base member is to use the *hidden fiel
 
       var x derived;
 
-      fmt.Println(x.a) //=> x.a, float32 (derived.a shadows base.a)
+      fmt.Printf("%T\n",x.a) //=> x.a, float32 (derived.a shadows base.a)
 
-      fmt.Println(x.base.a) //=> x.base.a, string (accessing shadowed member)
+      fmt.Printf("%T\n",x.base.a) //=> x.base.a, string (accessing shadowed member)
 
     }
 
@@ -167,8 +167,8 @@ It is important to note that all *inherited* methods **are called on the hidden-
     }
 
     type Rectangle struct {
-      NamedObj            //inheritance
-      Shape               //multiple inheritance
+      NamedObj            //multiple inheritance
+      Shape               //^^
       center        Point //standard composition
       Width, Height float64
     }
@@ -449,12 +449,14 @@ By picturing an ***Interface*** as a ***class with no fields and only virtual ab
 
 ***Interface{}*** in golang is a ***class with no fields and no methods***
 
-What can you do with a `var x Interface{}`? Well, initialy, nothing.
-
 But, since by definition all *classes(structs)* implement ***Interface{}*** it means
 that a `var x Interface{}` ***can hold any value***
 
-***To actually use** the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch) a *type assertion* or *reflection* 
+What can you do with a `var x Interface{}`? Well, initialy, nothing, because you don't know the type of the concrete value stored inside the `var x Interface{}`
+
+***To actually use*** the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch) a *type assertion* or *reflection* 
+
+There is no automatic type-conversion **from** `Interface{}`
 
 ## Using struct embedding
 
@@ -465,14 +467,16 @@ That's why a *struct* hierarchy ***is always faster***. When no interfaces are i
 ***The problem is with [second-level methods](second-level methods.md)***. You cannot alter the execution of a base-class second-level method, because all struct-methods are non-virtual. 
 You will inherit fields and methods, but methods are always executed on the base-class context.
 
+**When working with structs and embedding, everything is STATICALLY LINKED. All references are resolved at compile time. There are no virtual methods in structs**
+
 ## Using interfaces 
 
 When you use ***only interface embedding*** to create a multi-root hierarchy, via multiple inheritance, you must remember that *all interface methods are virtual*.
 
-That's why a *interface* hierarchy ***is always slower than structs***. When interfaces are involved, the compiler ***do not know*** at compile time, what concrete function to call, it depends on the concrete content of interface parameter, so all calls are ***resolved at run-time via method dispatch***. The mechanism is fast, but not as fast as compile-time resolved calls. Also a interface-method call, the concrete being unknown until run-time, cannot be inlined.
+That's why a *interface* hierarchy ***is always slower than structs***. When interfaces are involved, the compiler ***do not know*** at compile time, what concrete function to call, it depends on the concrete content of the interface var/parameter, so all calls are ***resolved at run-time via method dispatch***. The mechanism is fast, but not as fast as compile-time resolved concrete calls. Also, with an interface-method call, since the concrete function to call is unknown until run-time, the call cannot be inlined.
 
-***The advantage is with [second-level methods](second-level methods.md)***. You can alter the execution of a base-interface second-level method, because all interface-methods are virtual. 
-Since all calls are vua method-dispatch, methods are executed on the **actual instance** context.
+***The advantage of Interfaces is that: with [second-level methods](second-level methods.md)***. You can alter the execution of the base-interface second-level method, because all interface-methods are virtual. 
+Since all calls are made via method-dispatch, methods are executed on the context of the **actual instance**.
 
 
 ##To be continued...
