@@ -24,8 +24,9 @@ An Interface is a type holding two pointers:
 * a pointer to a method table (holding type and method implementations)
 * a pointer to a concrete value (the type defined by the method table)
 
-http://research.swtch.com/interfaces
-http://blog.golang.org/laws-of-reflection
+Ref:
+- http://research.swtch.com/interfaces
+- http://blog.golang.org/laws-of-reflection
 
 **Compare Interface to nil**
 
