@@ -344,7 +344,7 @@ Using it:
 
 A ***golang-Interface*** is ***a class with no fields and ONLY VIRTUAL methods***.
 
-The definition of *interface* in Golang is designed tom complement the *structs*. This is a very important "symbiotic" relationship in golang. *Interfaces* fits perfectly with *structs*. 
+The *interface* in Golang is designed to complement *structs*. This is a very important "symbiotic" relationship in golang. *Interface* fits perfectly with *structs*. 
 
 You have in Golang:
 >***Structs:  *** classes, with fields, ALL NON-VIRTUAL methods
@@ -421,12 +421,12 @@ When you declare a var/parameter with type interface:
     /*
     class Llama
       method Speak() string //non-virtual
-         return "LaLLamamQueLLama!"
+         return "LaLLamaQueLLama!"
     */       
     type Llama struct {
     }
     func (l Llama) Speak() string {
-      return "LaLLamamQueLLama!"
+      return "LaLLamaQueLLama!"
     }
     
     /*
@@ -454,7 +454,7 @@ that a `var x Interface{}` ***can hold any value***
 
 What can you do with a `var x Interface{}`? Well, initialy, nothing, because you don't know the type of the concrete value stored inside the `var x Interface{}`
 
-***To actually use*** the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch) a *type assertion* or *reflection* 
+***To actually use*** the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch), a *type assertion*, or *reflection* 
 
 There is no automatic type-conversion **from** `Interface{}`
 
