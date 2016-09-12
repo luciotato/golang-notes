@@ -131,7 +131,7 @@ Once shadowed, the only way to access the base member is to use the *hidden fiel
     type derived struct {
         base // embedding
         d int
-        a float32 //-SHADOWED
+        a float32 //-SHADOWS
     }
 
     func main() {
