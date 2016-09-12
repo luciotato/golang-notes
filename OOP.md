@@ -146,7 +146,7 @@ Once shadowed, the only way to access the base member is to use the *hidden fiel
 
 All base members can be accessed via the *hidden field* named as the base-struct-name.
 
-It is important to note that all *inherited* methods **are called on the hidden-field-struct**. It means that a base method cannot see or known about derived methods or fields. Everything is non-virtual.
+It is important to note that all *inherited* methods **are called on the hidden-field-struct**. It means that a base method cannot see or know about derived methods or fields. Everything is non-virtual.
 
 **When working with structs and embedding, everything is STATICALLY LINKED. All references are resolved at compile time.**
 
@@ -378,7 +378,7 @@ When you declare a var/parameter with type interface:
   - The function works for *every class* implementing the interface (the function is polymorphic)
 
 
-*Note on golan implementation*: The *ITables* used for method dispatch are constructed dynamically as needed and cached. Each *class(struct)* has one ITable for each *Interface* the *class(struct) implements*, so, if all *classes(structs)* implement all interfaces, there's a *ITable* for each *class(struct)*-*Interface* combination. See: [Go Data Structures: Interfaces](http://research.swtch.com/interfaces)
+*Note on golang implementation*: The *ITables* used for method dispatch are constructed dynamically as needed and cached. Each *class(struct)* has one ITable for each *Interface* the *class(struct) implements*, so, if all *classes(structs)* implement all interfaces, there's a *ITable* for each *class(struct)*-*Interface* combination. See: [Go Data Structures: Interfaces](http://research.swtch.com/interfaces)
 
 ####Examples from [How to use interfaces in Go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go) , with commented pseudo-code
 
@@ -445,7 +445,7 @@ When you declare a var/parameter with type interface:
 
 ###The empty Interface
 
-By picturing an ***Interface*** as a ***class with no fields and only virtual abstract methods***, you can understand ***what is*** the golang ***Empty Interface: "Interface{}"***.
+By picturing an ***Interface*** as a ***class with no fields and only virtual abstract methods***, you can understand ***what*** the golang ***Empty Interface: "Interface{}"*** is.
 
 ***Interface{}*** in golang is a ***class with no fields and no methods***
 
@@ -473,7 +473,7 @@ You will inherit fields and methods, but methods are always executed on the base
 
 When you use ***only interface embedding*** to create a multi-root hierarchy, via multiple inheritance, you must remember that *all interface methods are virtual*.
 
-That's why a *interface* hierarchy ***is always slower than structs***. When interfaces are involved, the compiler ***do not know*** at compile time, what concrete function to call, it depends on the concrete content of the interface var/parameter, so all calls are ***resolved at run-time via method dispatch***. The mechanism is fast, but not as fast as compile-time resolved concrete calls. Also, with an interface-method call, since the concrete function to call is unknown until run-time, the call cannot be inlined.
+That's why a *interface* hierarchy ***is always slower than structs***. When interfaces are involved, the compiler ***does not know*** at compile time, what concrete function to call. It depends on the concrete content of the interface var/parameter, so all calls are ***resolved at run-time via method dispatch***. The mechanism is fast, but not as fast as compile-time resolved concrete calls. Also, with an interface-method call, since the concrete function to call is unknown until run-time, the call cannot be inlined.
 
 ***The advantage of Interfaces is that: with [second-level methods](second-level methods.md)***. You can alter the execution of the base-interface second-level method, because all interface-methods are virtual. 
 Since all calls are made via method-dispatch, methods are executed on the context of the **actual instance**.
