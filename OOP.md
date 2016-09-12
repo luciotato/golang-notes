@@ -27,7 +27,7 @@ the learning is by far easier.
 |*struct*|class  with fields, only non-virtual methods
 |*interface*|class without fields, only virtual methods
 |*embedding*|multiple inheritance AND composition
-|*receiver*|implict *this* parameter
+|*receiver*|implicit *this* parameter
 
 ##Golang-struct is a class (non-virtual)
 
