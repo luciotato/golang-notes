@@ -9,15 +9,15 @@
 * ***Promote golang usage*** by easing language understanding for people coming from a heavy OOP background
 
 ###Why github?
-This is a discovery process, I'm writing this document to help myself understanding golang and maybe help others. 
+This is a discovery process, I'm writing this document to help myself understanding golang and maybe help others.
 This document is published in github. ***Pull requests are welcomed.***. There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
 
 ##Golang Concepts
-Golang introduce words with a new golang-specific meaning, as *struct* and *interface*.  
+Golang introduce words with a new golang-specific meaning, as *struct* and *interface*.
 This is not bad, but sometimes is nice to have a "translation" available to be able to understand golang-concepts by relating them to previously known concepts.
 
-This is important in order to *understand* concepts of a new language, 
-if you can *translate* a golang-word to previously known concepts, 
+This is important in order to *understand* concepts of a new language,
+if you can *translate* a golang-word to previously known concepts,
 the learning is by far easier.
 
 ##Cheat Sheet
@@ -33,13 +33,16 @@ the learning is by far easier.
 
 A ***golang-struct*** is a ***class*** with ***fields*** where all the methods are ***non-virtual***. e.g.:
 
-    type Rectangle struct {
-      Name          string
-      Width, Height float64
-    }
-    func (r Rectangle) Area() float64{
-      return r.Width * r.Height
-    }
+```go
+type Rectangle struct {
+  Name          string
+  Width, Height float64
+}
+func (r Rectangle) Area() float64{
+  return r.Width * r.Height
+}
+```
+
 This can be read as (pseudo code):
 
     class Rectangle
@@ -50,20 +53,20 @@ This can be read as (pseudo code):
          return this.Width * this.Height
 
 ###Constructor
-  
+
 - There is a *zero-value* defined for each core-type, so if you do not provide values at instantiation, all fields will have the zero-value
 
 - No specific in-class constructors. There is a *generic constructor* for any class instance, receiving a generic literal in a JSON-like format and using reflection to create instances of any class.
 
 pseudo-code for the generic constructor:
 
-        function construct ( class,  literal) 
+        function construct ( class,  literal)
 
           helper function assignFields ( object, literal)  //recursive
             if type-of object is "object"
                 if literal has field-names
                     for each field in object.fields
-                        if literal has-field field.name 
+                        if literal has-field field.name
                             assignFields(field.value,  literal.fields[field.name].value) //recurse
                 else
                 //literal without names, assign by position
@@ -72,39 +75,44 @@ pseudo-code for the generic constructor:
             else
                 //atom type
                 set object.value = literal.value
-          
+
 
         // generic constructor main body
         var classInstance = new class
         assignFields(classInstance, literal)
         return classInstance
-    
-    
+
+
 Constructors example:
 
-    package main
-    import . "fmt"
-    
-    type Rectangle struct {
-      Name          string
-      Width, Height float64
-    }
-    
-    func main() {
-    
-      var a Rectangle
-      var b = Rectangle{"I'm b.", 10, 20}
-      var c = Rectangle{Height: 12, Width: 14}
-    
-      Println(a)
-      Println(b)
-      Println(c)
-    }
+```go
+package main
+import . "fmt"
 
-    =>
-    { 0 0}
-    {I'm b. 10 20}
-    { 14 12}
+type Rectangle struct {
+  Name          string
+  Width, Height float64
+}
+
+func main() {
+
+  var a Rectangle
+  var b = Rectangle{"I'm b.", 10, 20}
+  var c = Rectangle{Height: 12, Width: 14}
+
+  Println(a)
+  Println(b)
+  Println(c)
+}
+```
+
+Output:
+
+```
+{ 0 0}
+{I'm b. 10 20}
+{ 14 12}
+```
 
 
 ##Golang "embedding" is akin to ***multiple inheritance with non-virtual methods***
@@ -122,27 +130,29 @@ Base fields and methods are directly available as if they were declared in the d
 **Shadowing** means defining another field or method *with the same name (and signature)* of a *base* field or method.
 
 Once shadowed, the only way to access the base member is to use the *hidden field* named as the base-struct-name.
- 
-    type base struct {
-        a string
-        b int
-    }
 
-    type derived struct {
-        base // embedding
-        d int
-        a float32 //-SHADOWED
-    }
+```go
+type base struct {
+    a string
+    b int
+}
 
-    func main() {
+type derived struct {
+    base // embedding
+    d int
+    a float32 //-SHADOWED
+}
 
-      var x derived;
+func main() {
 
-      fmt.Printf("%T\n",x.a) //=> x.a, float32 (derived.a shadows base.a)
+  var x derived;
 
-      fmt.Printf("%T\n",x.base.a) //=> x.base.a, string (accessing shadowed member)
+  fmt.Printf("%T\n",x.a) //=> x.a, float32 (derived.a shadows base.a)
 
-    }
+  fmt.Printf("%T\n",x.base.a) //=> x.base.a, string (accessing shadowed member)
+
+}
+```
 
 All base members can be accessed via the *hidden field* named as the base-struct-name.
 
@@ -150,60 +160,62 @@ It is important to note that all *inherited* methods **are called on the hidden-
 
 **When working with structs and embedding, everything is STATICALLY LINKED. All references are resolved at compile time.**
 
-###Multiple embedding 
+###Multiple embedding
 
-    type NamedObj struct {
-      Name string
-    }
+```go
+type NamedObj struct {
+  Name string
+}
 
-    type Shape struct {
-      NamedObj  //inheritance
-      color     int32
-      isRegular bool
-    }
+type Shape struct {
+  NamedObj  //inheritance
+  color     int32
+  isRegular bool
+}
 
-    type Point struct {
-      x, y float64
-    }
+type Point struct {
+  x, y float64
+}
 
-    type Rectangle struct {
-      NamedObj            //multiple inheritance
-      Shape               //^^
-      center        Point //standard composition
-      Width, Height float64
-    }
+type Rectangle struct {
+  NamedObj            //multiple inheritance
+  Shape               //^^
+  center        Point //standard composition
+  Width, Height float64
+}
 
-    func main() {
+func main() {
 
-      var aRect Rectangle = Rectangle{NamedObj{"name1"},
-        Shape{NamedObj{"name2"}, 0, true},
-        Point{0, 0},
-        20, 2.5}
+  var aRect Rectangle = Rectangle{NamedObj{"name1"},
+    Shape{NamedObj{"name2"}, 0, true},
+    Point{0, 0},
+    20, 2.5}
 
-      fmt.Println(aRect.Name)
-      fmt.Println(aRect.Shape)
-      fmt.Println(aRect.Shape.Name)    
-    }
+  fmt.Println(aRect.Name)
+  fmt.Println(aRect.Shape)
+  fmt.Println(aRect.Shape.Name)
+}
+```
 
 This can be read: (pseudo code)
 
     class NamedObj
        field Name: string
-  
+
     class Shape
        inherits NamedObj
        field color: int32
        field isRegular: bool
-       
+
     class Rectangle
        inherits NamedObj
        inherits Shape
        field center: Point
        field Width: float64
        field Height: float64
-  
-     
-Example: 
+
+
+Example:
 
    In `var aRect Rectangle`:
 
@@ -225,48 +237,50 @@ If you have a ***method show()*** for example in ***class/struct NamedObj*** and
 
 As with base class fields, you can use the ***inherited class-name-as-field*** to access the base implementation via dot-notation, e.g.:
 
-    type base struct {
-        a string
-        b int
-    }
+```go
+type base struct {
+    a string
+    b int
+}
 
-    //method xyz
-    func (this base) xyz() {
-      fmt.Println("xyz, a is:", this.a)  
-    }
+//method xyz
+func (this base) xyz() {
+  fmt.Println("xyz, a is:", this.a)
+}
 
-    //method display
-    func (this base) display() {
-      fmt.Println("base, a is:",this.a)  
-    }
+//method display
+func (this base) display() {
+  fmt.Println("base, a is:",this.a)
+}
 
-    type derived struct {
-        base // embedding
-        d int
-        a float32 //-SHADOWED
-    }
+type derived struct {
+    base // embedding
+    d int
+    a float32 //-SHADOWED
+}
 
-    //method display -SHADOWED
-    func (this derived) display() {
-      fmt.Println("derived a is:",this.a) 
-    }
-
-
-    func main() {
-
-      var a derived = derived{base{"base-a",10},20,2.5}
-
-      a.display()       // calls Derived/display(a)
-      // => "derived, a is: 2.5"
-      
-      a.base.display() // calls Base/display(a.base), the base implementation
-      // => "base, a is: base-a"
+//method display -SHADOWED
+func (this derived) display() {
+  fmt.Println("derived a is:",this.a)
+}
 
 
-      a.xyz() // "xyz" was not shadowed, calls Base/xyz(a.base)
-      // => "xyz, a is: base-a"
+func main() {
 
-    }
+  var a derived = derived{base{"base-a",10},20,2.5}
+
+  a.display()       // calls Derived/display(a)
+  // => "derived, a is: 2.5"
+
+  a.base.display() // calls Base/display(a.base), the base implementation
+  // => "base, a is: base-a"
+
+
+  a.xyz() // "xyz" was not shadowed, calls Base/xyz(a.base)
+  // => "xyz, a is: base-a"
+
+}
+```
 
 ###Multiple inheritance and The Diamond Problem
 
@@ -281,70 +295,76 @@ Note: Golang allows you to create a "Diamond" inheritance diagram, and only will
 A golang ***struct-method*** is the same as a ***class non-virtual method*** but:
 
 - It is defined *outside* of the ***class(struct)*** body
-- Since it is outside the class, it has an *extra section* before the method name to define the ***"receiver" (this)***. 
+- Since it is outside the class, it has an *extra section* before the method name to define the ***"receiver" (this)***.
 - The extra section defines ***this*** as an ***explicit parameter*** (The ***this/self*** parameter is implicit in most OOP languages).
 - Since there is such a special section to define ***this (receiver)***, you can also select a ***name*** for ***this/self***. Idiomatic golang is to use a short var name with the class initials. e.g.:
 
 Example
 
-        //class NamedObj
-        type NamedObj struct {
-          Name      string
-        }
-        //method show
-        func (n NamedObj) show() {
-          Println(n.Name)  // "n" is "this"
-        }
-      
-        //class Rectangle
-        type Rectangle struct {
-          NamedObj              //inheritance
-          Width, Height float64
-        }
-        //override method show
-        func (r Rectangle) show() {
-          Println("Rectangle ",r.name)  // "r" is "this"
-        }
+```go
+//class NamedObj
+type NamedObj struct {
+  Name      string
+}
+//method show
+func (n NamedObj) show() {
+  Println(n.Name)  // "n" is "this"
+}
+
+//class Rectangle
+type Rectangle struct {
+  NamedObj              //inheritance
+  Width, Height float64
+}
+//override method show
+func (r Rectangle) show() {
+  Println("Rectangle ",r.name)  // "r" is "this"
+}
+```
 
   Pseudo-code:
-  
+
       class NamedObj
          Name: string
-    
+
          method show
            print this.Name
-    
+
       class Rectangle
          inherits NamedObj
          field Width: float64
          field Height: float64
-    
+
          method show //override
            print "Rectangle", this.Name
 
 Using it:
 
-    func main() {
-  
-      var a = NamedObj{"Joe"}
-      var b = Rectangle{NamedObj{"Richard"}, 10, 20}
-  
-      a.show("Hello")
-      b.show("Hello")
-  
-    }
+```go
+func main() {
 
-    =>
-    Hello I'm Joe
-    Hello I'm Richard
-    - I'm a Rectangle named Richard
+  var a = NamedObj{"Joe"}
+  var b = Rectangle{NamedObj{"Richard"}, 10, 20}
 
+  a.show("Hello")
+  b.show("Hello")
 
-##Structs vs Interfaces 
+}
+```
+
+Output:
+
+```
+Hello I'm Joe
+Hello I'm Richard
+- I'm a Rectangle named Richard
+```
+
+##Structs vs Interfaces
 
 A ***golang-Interface*** is ***a class with no fields and ONLY VIRTUAL methods***.
 
-The *interface* in Golang is designed to complement *structs*. This is a very important "symbiotic" relationship in golang. *Interface* fits perfectly with *structs*. 
+The *interface* in Golang is designed to complement *structs*. This is a very important "symbiotic" relationship in golang. *Interface* fits perfectly with *structs*.
 
 You have in Golang:
 >***Structs:  *** classes, with fields, ALL NON-VIRTUAL methods
@@ -373,7 +393,7 @@ When you declare a var/parameter with type interface:
 - The var/parameter has no fields
 - The var/parameter has *a defined set of methods*
 - When you call a method on the var/parameter, a *concrete method* is called via *method dispatch* from a jmp-table. (polymorphism via method dispatch)
-- When the interface is used as a parameter type: 
+- When the interface is used as a parameter type:
   - You can call the function with *any class* implementing the interface
   - The function works for *every class* implementing the interface (the function is polymorphic)
 
@@ -382,66 +402,68 @@ When you declare a var/parameter with type interface:
 
 ####Examples from [How to use interfaces in Go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go) , with commented pseudo-code
 
-    package main
-    
-    import (
-      "fmt"
-    )
-    
-    /*
-    class Animal
-       virtual abstract Speak() string
-    */
-    type Animal interface {
-      Speak() string
-    }
-    
-    /*
-    class Dog
-      method Speak() string //non-virtual
-         return "Woof!"
-    */       
-    type Dog struct {
-    }
-    func (d Dog) Speak() string {
-      return "Woof!"
-    }
-    
-    /*
-    class Cat
-      method Speak() string //non-virtual
-         return "Meow!"
-    */       
-    type Cat struct {
-    }
-    func (c Cat) Speak() string {
-      return "Meow!"
-    }
-    
-    /*
-    class Llama
-      method Speak() string //non-virtual
-         return "LaLLamaQueLLama!"
-    */       
-    type Llama struct {
-    }
-    func (l Llama) Speak() string {
-      return "LaLLamaQueLLama!"
-    }
-    
-    /*
-    func main
-      var animals = [ Dog{}, Cat{}, Llama{} ]
-      for each animal in animals
-         print animal.Speak() // method dispatch via jmp-table
-    */       
-  
-    func main() {
-      animals := []Animal{Dog{}, Cat{}, Llama{}}
-      for _, animal := range animals {
-        fmt.Println(animal.Speak()) // method dispatch via jmp-table
-      }
-    }
+```go
+package main
+
+import (
+  "fmt"
+)
+
+/*
+class Animal
+   virtual abstract Speak() string
+*/
+type Animal interface {
+  Speak() string
+}
+
+/*
+class Dog
+  method Speak() string //non-virtual
+     return "Woof!"
+*/
+type Dog struct {
+}
+func (d Dog) Speak() string {
+  return "Woof!"
+}
+
+/*
+class Cat
+  method Speak() string //non-virtual
+     return "Meow!"
+*/
+type Cat struct {
+}
+func (c Cat) Speak() string {
+  return "Meow!"
+}
+
+/*
+class Llama
+  method Speak() string //non-virtual
+     return "LaLLamaQueLLama!"
+*/
+type Llama struct {
+}
+func (l Llama) Speak() string {
+  return "LaLLamaQueLLama!"
+}
+
+/*
+func main
+  var animals = [ Dog{}, Cat{}, Llama{} ]
+  for each animal in animals
+     print animal.Speak() // method dispatch via jmp-table
+*/
+
+func main() {
+  animals := []Animal{Dog{}, Cat{}, Llama{}}
+  for _, animal := range animals {
+    fmt.Println(animal.Speak()) // method dispatch via jmp-table
+  }
+}
+```
 
 ###The empty Interface
 
@@ -454,7 +476,7 @@ that a `var x Interface{}` ***can hold any value***
 
 What can you do with a `var x Interface{}`? Well, initialy, nothing, because you don't know the type of the concrete value stored inside the `var x Interface{}`
 
-***To actually use*** the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch), a *type assertion*, or *reflection* 
+***To actually use*** the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch), a *type assertion*, or *reflection*
 
 There is no automatic type-conversion **from** `Interface{}`
 
@@ -464,22 +486,22 @@ When you use ***only struct embedding*** to create a multi-root hierarchy, via m
 
 That's why a *struct* hierarchy ***is always faster***. When no interfaces are involved, the compiler ***knows*** exactly what concrete function to call, so all calls are direct calls resolved at compile time. Also the functions can be inlined.
 
-***The problem is with [second-level methods](second-level methods.md)***. You cannot alter the execution of a base-class second-level method, because all struct-methods are non-virtual. 
+***The problem is with [second-level methods](second-level methods.md)***. You cannot alter the execution of a base-class second-level method, because all struct-methods are non-virtual.
 You will inherit fields and methods, but methods are always executed on the base-class context.
 
 **When working with structs and embedding, everything is STATICALLY LINKED. All references are resolved at compile time. There are no virtual methods in structs**
 
-## Using interfaces 
+## Using interfaces
 
 When you use ***only interface embedding*** to create a multi-root hierarchy, via multiple inheritance, you must remember that *all interface methods are virtual*.
 
 That's why a *interface* hierarchy ***is always slower than structs***. When interfaces are involved, the compiler ***does not know*** at compile time, what concrete function to call. It depends on the concrete content of the interface var/parameter, so all calls are ***resolved at run-time via method dispatch***. The mechanism is fast, but not as fast as compile-time resolved concrete calls. Also, with an interface-method call, since the concrete function to call is unknown until run-time, the call cannot be inlined.
 
-***The advantage of Interfaces is that: with [second-level methods](second-level methods.md)***. You can alter the execution of the base-interface second-level method, because all interface-methods are virtual. 
+***The advantage of Interfaces is that: with [second-level methods](second-level methods.md)***. You can alter the execution of the base-interface second-level method, because all interface-methods are virtual.
 Since all calls are made via method-dispatch, methods are executed on the context of the **actual instance**.
 
 
 ##To be continued...
 
-Drafts: 
+Drafts:
  [Type Switch Internals](Type Switch Internals.md)
