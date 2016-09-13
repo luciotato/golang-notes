@@ -474,7 +474,7 @@ By picturing an ***Interface*** as a ***class with no fields and only virtual ab
 But, since by definition all *classes(structs)* implement ***Interface{}*** it means
 that a `var x Interface{}` ***can hold any value***
 
-What can you do with a `var x Interface{}`? Well, initialy, nothing, because you don't know the type of the concrete value stored inside the `var x Interface{}`
+What can you do with a `var x Interface{}`? Well, initially, nothing, because you don't know the type of the concrete value stored inside the `var x Interface{}`
 
 ***To actually use*** the *value* inside a `var x Interface{}` you must use a [Type Switch](https://golang.org/doc/effective_go.html#type_switch), a *type assertion*, or *reflection*
 
