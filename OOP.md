@@ -313,7 +313,7 @@ func (n NamedObj) show() {
 
 //class Rectangle
 type Rectangle struct {
-  NamedObj              //inheritance
+  NamedObj      //inheritance
   Width, Height float64
 }
 //override method show
