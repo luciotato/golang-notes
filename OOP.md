@@ -1,37 +1,37 @@
-#Golang concepts from an OOP point of view
+#Go concepts from an OOP point of view
 
 ##Introduction
 
 ###Objectives of this document
 
-* Ease golang learning by associating golang-specific *concepts* with previously known concepts in the OOP field.
+* Ease go learning by associating go-specific *concepts* with previously known concepts in the OOP field.
 
-* ***Promote golang usage*** by easing language understanding for people coming from a heavy OOP background
+* ***Promote go usage*** by easing language understanding for people coming from a heavy OOP background
 
 ###Why github?
-This is a discovery process, I'm writing this document to help myself understanding golang and maybe help others.
+This is a discovery process, I'm writing this document to help myself understanding go and maybe help others.
 This document is published in github. ***Pull requests are welcomed.***. There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
 
-##Golang Concepts
-Golang introduce words with a new golang-specific meaning, as *struct* and *interface*.
-This is not bad, but sometimes is nice to have a "translation" available to be able to understand golang-concepts by relating them to previously known concepts.
+##Go Concepts
+Go introduce words with a new go-specific meaning, as *struct* and *interface*.
+This is not bad, but sometimes is nice to have a "translation" available to be able to understand go-concepts by relating them to previously known concepts.
 
 This is important in order to *understand* concepts of a new language,
-if you can *translate* a golang-word to previously known concepts,
+if you can *translate* a go-word to previously known concepts,
 the learning is by far easier.
 
 ##Cheat Sheet
 
-|Golang|Classic OOP
+|Go|Classic OOP
 |----|-----|
 |*struct*|class  with fields, only non-virtual methods
 |*interface*|class without fields, only virtual methods
 |*embedding*|multiple inheritance AND composition
 |*receiver*|implicit *this* parameter
 
-##Golang-struct is a class (non-virtual)
+##Go-struct is a class (non-virtual)
 
-A ***golang-struct*** is a ***class*** with ***fields*** where all the methods are ***non-virtual***. e.g.:
+A ***go-struct*** is a ***class*** with ***fields*** where all the methods are ***non-virtual***. e.g.:
 
 ```go
 type Rectangle struct {
@@ -116,7 +116,7 @@ Output:
 ```
 
 
-##Golang "embedding" is akin to ***multiple inheritance with non-virtual methods***
+##Go "embedding" is akin to ***multiple inheritance with non-virtual methods***
 
 By *embedding* a struct into another you have a mechanism similar to ***multiple inheritance with non-virtual members***.
 
@@ -230,7 +230,7 @@ Example:
 
 ###Method Shadowing
 
-Since all ***golang-struct*** methods are ***non-virtual***, ***you cannot override methods*** (you need *interfaces* for that)
+Since all ***go-struct*** methods are ***non-virtual***, ***you cannot override methods*** (you need *interfaces* for that)
 
 If you have a ***method show()*** for example in ***class/struct NamedObj*** and also define a ***method show()*** in ***class/struct Rectangle***,
 ***Rectangle/show()*** will ***SHADOW*** the parent's class ***NamedObj/Show()***
@@ -280,15 +280,15 @@ func main() {
 
 ###Multiple inheritance and The Diamond Problem
 
-Golang solves [the diamond problem](https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem) by *not allowing diamonds*.
+Go solves [the diamond problem](https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem) by *not allowing diamonds*.
 
 Since ***inheritance (embedded fields)*** include inherited field names in the ***inheriting class (struct)***, all *embedded* class-field-names *should not collide*. You must rename fields if there is a name collision. This rule avoids the diamond problem, by not allowing it.
 
-Note: Golang allows you to create a "Diamond" inheritance diagram, and only will complain when you try to access a parent's class field ambiguously.
+Note: Go allows you to create a "Diamond" inheritance diagram, and only will complain when you try to access a parent's class field ambiguously.
 
-##Golang *methods* and ***"receivers" (this)***
+##Go *methods* and ***"receivers" (this)***
 
-A golang ***struct-method*** is the same as a ***class non-virtual method*** but:
+A go ***struct-method*** is the same as a ***class non-virtual method*** but:
 
 - It is defined *outside* of the ***class(struct)*** body
 - Since it is outside the class, it has an *extra section* before the method name to define the ***"receiver" (this)***.
@@ -359,11 +359,11 @@ Hello I'm Richard
 
 ##Structs vs Interfaces
 
-A ***golang-Interface*** is ***a class with no fields and ONLY VIRTUAL methods***.
+A ***go-Interface*** is ***a class with no fields and ONLY VIRTUAL methods***.
 
-The *interface* in Golang is designed to complement *structs*. This is a very important "symbiotic" relationship in golang. *Interface* fits perfectly with *structs*.
+The *interface* in Go is designed to complement *structs*. This is a very important "symbiotic" relationship in go. *Interface* fits perfectly with *structs*.
 
-You have in Golang:
+You have in Go:
 >***Structs:  *** classes, with fields, ALL NON-VIRTUAL methods
 >***Interfaces:  *** classes, with NO fields, ALL VIRTUAL methods
 
@@ -371,13 +371,13 @@ By restricting *structs* to non-virtual methods, and  restricting *interfaces* t
 
 ##Interfaces
 
-A *golang-Interface* is a ***class, with NO fields, and ALL VIRTUAL methods***
+A *go-Interface* is a ***class, with NO fields, and ALL VIRTUAL methods***
 
 Given this definition, you can use an interface to:
 
 - Declare a var or parameter of type *interface*.
 - *implement* an interface, by declaring all the *interface virtual methods* in a *concrete class (a struct)*
-- *inherit(embed)* a golang-interface into another golang-interface
+- *inherit(embed)* a go-interface into another go-interface
 
 ###Declare a var/parameter with type interface
 
