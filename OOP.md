@@ -141,7 +141,7 @@ type base struct {
 type derived struct {
 	base // embedding
 	d    int
-	a    float32 //-SHADOWED
+	a    float32 //-SHADOWS
 }
 
 func main() {
