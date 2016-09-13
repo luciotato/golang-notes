@@ -33,13 +33,16 @@ the learning is by far easier.
 
 A ***golang-struct*** is a ***class*** with ***fields*** where all the methods are ***non-virtual***. e.g.:
 
-    type Rectangle struct {
-      Name          string
-      Width, Height float64
-    }
-    func (r Rectangle) Area() float64{
-      return r.Width * r.Height
-    }
+```go
+type Rectangle struct {
+  Name          string
+  Width, Height float64
+}
+func (r Rectangle) Area() float64{
+  return r.Width * r.Height
+}
+```
+
 This can be read as (pseudo code):
 
     class Rectangle
@@ -82,29 +85,34 @@ pseudo-code for the generic constructor:
     
 Constructors example:
 
-    package main
-    import . "fmt"
-    
-    type Rectangle struct {
-      Name          string
-      Width, Height float64
-    }
-    
-    func main() {
-    
-      var a Rectangle
-      var b = Rectangle{"I'm b.", 10, 20}
-      var c = Rectangle{Height: 12, Width: 14}
-    
-      Println(a)
-      Println(b)
-      Println(c)
-    }
+```go
+package main
+import . "fmt"
 
-    =>
-    { 0 0}
-    {I'm b. 10 20}
-    { 14 12}
+type Rectangle struct {
+  Name          string
+  Width, Height float64
+}
+
+func main() {
+
+  var a Rectangle
+  var b = Rectangle{"I'm b.", 10, 20}
+  var c = Rectangle{Height: 12, Width: 14}
+
+  Println(a)
+  Println(b)
+  Println(c)
+}
+```
+
+Output:
+
+```
+{ 0 0}
+{I'm b. 10 20}
+{ 14 12}
+```
 
 
 ##Golang "embedding" is akin to ***multiple inheritance with non-virtual methods***
@@ -122,27 +130,29 @@ Base fields and methods are directly available as if they were declared in the d
 **Shadowing** means defining another field or method *with the same name (and signature)* of a *base* field or method.
 
 Once shadowed, the only way to access the base member is to use the *hidden field* named as the base-struct-name.
- 
-    type base struct {
-        a string
-        b int
-    }
 
-    type derived struct {
-        base // embedding
-        d int
-        a float32 //-SHADOWED
-    }
+```go
+type base struct {
+    a string
+    b int
+}
 
-    func main() {
+type derived struct {
+    base // embedding
+    d int
+    a float32 //-SHADOWED
+}
 
-      var x derived;
+func main() {
 
-      fmt.Printf("%T\n",x.a) //=> x.a, float32 (derived.a shadows base.a)
+  var x derived;
 
-      fmt.Printf("%T\n",x.base.a) //=> x.base.a, string (accessing shadowed member)
+  fmt.Printf("%T\n",x.a) //=> x.a, float32 (derived.a shadows base.a)
 
-    }
+  fmt.Printf("%T\n",x.base.a) //=> x.base.a, string (accessing shadowed member)
+
+}
+```
 
 All base members can be accessed via the *hidden field* named as the base-struct-name.
 
@@ -152,38 +162,40 @@ It is important to note that all *inherited* methods **are called on the hidden-
 
 ###Multiple embedding 
 
-    type NamedObj struct {
-      Name string
-    }
+```go
+type NamedObj struct {
+  Name string
+}
 
-    type Shape struct {
-      NamedObj  //inheritance
-      color     int32
-      isRegular bool
-    }
+type Shape struct {
+  NamedObj  //inheritance
+  color     int32
+  isRegular bool
+}
 
-    type Point struct {
-      x, y float64
-    }
+type Point struct {
+  x, y float64
+}
 
-    type Rectangle struct {
-      NamedObj            //multiple inheritance
-      Shape               //^^
-      center        Point //standard composition
-      Width, Height float64
-    }
+type Rectangle struct {
+  NamedObj            //multiple inheritance
+  Shape               //^^
+  center        Point //standard composition
+  Width, Height float64
+}
 
-    func main() {
+func main() {
 
-      var aRect Rectangle = Rectangle{NamedObj{"name1"},
-        Shape{NamedObj{"name2"}, 0, true},
-        Point{0, 0},
-        20, 2.5}
+  var aRect Rectangle = Rectangle{NamedObj{"name1"},
+    Shape{NamedObj{"name2"}, 0, true},
+    Point{0, 0},
+    20, 2.5}
 
-      fmt.Println(aRect.Name)
-      fmt.Println(aRect.Shape)
-      fmt.Println(aRect.Shape.Name)    
-    }
+  fmt.Println(aRect.Name)
+  fmt.Println(aRect.Shape)
+  fmt.Println(aRect.Shape.Name)    
+}
+```
 
 This can be read: (pseudo code)
 
@@ -225,48 +237,50 @@ If you have a ***method show()*** for example in ***class/struct NamedObj*** and
 
 As with base class fields, you can use the ***inherited class-name-as-field*** to access the base implementation via dot-notation, e.g.:
 
-    type base struct {
-        a string
-        b int
-    }
+```go
+type base struct {
+    a string
+    b int
+}
 
-    //method xyz
-    func (this base) xyz() {
-      fmt.Println("xyz, a is:", this.a)  
-    }
+//method xyz
+func (this base) xyz() {
+  fmt.Println("xyz, a is:", this.a)
+}
 
-    //method display
-    func (this base) display() {
-      fmt.Println("base, a is:",this.a)  
-    }
+//method display
+func (this base) display() {
+  fmt.Println("base, a is:",this.a)
+}
 
-    type derived struct {
-        base // embedding
-        d int
-        a float32 //-SHADOWED
-    }
+type derived struct {
+    base // embedding
+    d int
+    a float32 //-SHADOWED
+}
 
-    //method display -SHADOWED
-    func (this derived) display() {
-      fmt.Println("derived a is:",this.a) 
-    }
-
-
-    func main() {
-
-      var a derived = derived{base{"base-a",10},20,2.5}
-
-      a.display()       // calls Derived/display(a)
-      // => "derived, a is: 2.5"
-      
-      a.base.display() // calls Base/display(a.base), the base implementation
-      // => "base, a is: base-a"
+//method display -SHADOWED
+func (this derived) display() {
+  fmt.Println("derived a is:",this.a)
+}
 
 
-      a.xyz() // "xyz" was not shadowed, calls Base/xyz(a.base)
-      // => "xyz, a is: base-a"
+func main() {
 
-    }
+  var a derived = derived{base{"base-a",10},20,2.5}
+
+  a.display()       // calls Derived/display(a)
+  // => "derived, a is: 2.5"
+
+  a.base.display() // calls Base/display(a.base), the base implementation
+  // => "base, a is: base-a"
+
+
+  a.xyz() // "xyz" was not shadowed, calls Base/xyz(a.base)
+  // => "xyz, a is: base-a"
+
+}
+```
 
 ###Multiple inheritance and The Diamond Problem
 
@@ -287,24 +301,26 @@ A golang ***struct-method*** is the same as a ***class non-virtual method*** but
 
 Example
 
-        //class NamedObj
-        type NamedObj struct {
-          Name      string
-        }
-        //method show
-        func (n NamedObj) show() {
-          Println(n.Name)  // "n" is "this"
-        }
-      
-        //class Rectangle
-        type Rectangle struct {
-          NamedObj              //inheritance
-          Width, Height float64
-        }
-        //override method show
-        func (r Rectangle) show() {
-          Println("Rectangle ",r.name)  // "r" is "this"
-        }
+```go
+//class NamedObj
+type NamedObj struct {
+  Name      string
+}
+//method show
+func (n NamedObj) show() {
+  Println(n.Name)  // "n" is "this"
+}
+
+//class Rectangle
+type Rectangle struct {
+  NamedObj              //inheritance
+  Width, Height float64
+}
+//override method show
+func (r Rectangle) show() {
+  Println("Rectangle ",r.name)  // "r" is "this"
+}
+```
 
   Pseudo-code:
   
@@ -324,21 +340,25 @@ Example
 
 Using it:
 
-    func main() {
-  
-      var a = NamedObj{"Joe"}
-      var b = Rectangle{NamedObj{"Richard"}, 10, 20}
-  
-      a.show("Hello")
-      b.show("Hello")
-  
-    }
+```go
+func main() {
 
-    =>
-    Hello I'm Joe
-    Hello I'm Richard
-    - I'm a Rectangle named Richard
+  var a = NamedObj{"Joe"}
+  var b = Rectangle{NamedObj{"Richard"}, 10, 20}
 
+  a.show("Hello")
+  b.show("Hello")
+
+}
+```
+
+Output:
+
+```
+Hello I'm Joe
+Hello I'm Richard
+- I'm a Rectangle named Richard
+```
 
 ##Structs vs Interfaces 
 
@@ -382,66 +402,68 @@ When you declare a var/parameter with type interface:
 
 ####Examples from [How to use interfaces in Go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go) , with commented pseudo-code
 
-    package main
-    
-    import (
-      "fmt"
-    )
-    
-    /*
-    class Animal
-       virtual abstract Speak() string
-    */
-    type Animal interface {
-      Speak() string
-    }
-    
-    /*
-    class Dog
-      method Speak() string //non-virtual
-         return "Woof!"
-    */       
-    type Dog struct {
-    }
-    func (d Dog) Speak() string {
-      return "Woof!"
-    }
-    
-    /*
-    class Cat
-      method Speak() string //non-virtual
-         return "Meow!"
-    */       
-    type Cat struct {
-    }
-    func (c Cat) Speak() string {
-      return "Meow!"
-    }
-    
-    /*
-    class Llama
-      method Speak() string //non-virtual
-         return "LaLLamaQueLLama!"
-    */       
-    type Llama struct {
-    }
-    func (l Llama) Speak() string {
-      return "LaLLamaQueLLama!"
-    }
-    
-    /*
-    func main
-      var animals = [ Dog{}, Cat{}, Llama{} ]
-      for each animal in animals
-         print animal.Speak() // method dispatch via jmp-table
-    */       
-  
-    func main() {
-      animals := []Animal{Dog{}, Cat{}, Llama{}}
-      for _, animal := range animals {
-        fmt.Println(animal.Speak()) // method dispatch via jmp-table
-      }
-    }
+```go
+package main
+
+import (
+  "fmt"
+)
+
+/*
+class Animal
+   virtual abstract Speak() string
+*/
+type Animal interface {
+  Speak() string
+}
+
+/*
+class Dog
+  method Speak() string //non-virtual
+     return "Woof!"
+*/
+type Dog struct {
+}
+func (d Dog) Speak() string {
+  return "Woof!"
+}
+
+/*
+class Cat
+  method Speak() string //non-virtual
+     return "Meow!"
+*/
+type Cat struct {
+}
+func (c Cat) Speak() string {
+  return "Meow!"
+}
+
+/*
+class Llama
+  method Speak() string //non-virtual
+     return "LaLLamaQueLLama!"
+*/
+type Llama struct {
+}
+func (l Llama) Speak() string {
+  return "LaLLamaQueLLama!"
+}
+
+/*
+func main
+  var animals = [ Dog{}, Cat{}, Llama{} ]
+  for each animal in animals
+     print animal.Speak() // method dispatch via jmp-table
+*/
+
+func main() {
+  animals := []Animal{Dog{}, Cat{}, Llama{}}
+  for _, animal := range animals {
+    fmt.Println(animal.Speak()) // method dispatch via jmp-table
+  }
+}
+```
 
 ###The empty Interface
 
