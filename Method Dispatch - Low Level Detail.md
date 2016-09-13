@@ -1,4 +1,4 @@
-***This is what I understand happend at low-level when you use interface parameters/vars***
+***This is what I understand happens at low-level when you use interface parameters/vars***
 
 ###Golang Interfaces###
 
