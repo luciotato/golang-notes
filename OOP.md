@@ -318,7 +318,7 @@ type Rectangle struct {
 }
 //override method show
 func (r Rectangle) show() {
-  Println("Rectangle ",r.name)  // "r" is "this"
+  Println("Rectangle ",r.Name)  // "r" is "this"
 }
 ```
 
