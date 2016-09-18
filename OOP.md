@@ -9,15 +9,15 @@
 * ***Promote golang usage*** by easing language understanding for people coming from a heavy OOP background
 
 ###Why github?
-This is a discovery process, I'm writing this document to help myself understanding golang and maybe help others.
+This is a discovery process, I'm writing this document to help myself understand golang and maybe help others.
 This document is published in github. ***Pull requests are welcomed.***. There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
 
 ##Golang Concepts
-Golang introduce words with a new golang-specific meaning, as *struct* and *interface*.
-This is not bad, but sometimes is nice to have a "translation" available to be able to understand golang-concepts by relating them to previously known concepts.
+Golang introduces words with a new golang-specific meaning, such as *struct* and *interface*.
+This is not bad, but sometimes it is nice to have a "translation" available to be able to understand golang-concepts by relating them to previously known concepts.
 
-This is important in order to *understand* concepts of a new language,
-if you can *translate* a golang-word to previously known concepts,
+This is important in order to *understand* concepts of a new language.
+If you can *translate* a golang-word to previously known concepts,
 the learning is by far easier.
 
 ##Cheat Sheet
