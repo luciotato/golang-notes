@@ -4,11 +4,13 @@
 
 A ***golang-Interface*** is ***a class with no fields and ONLY VIRTUAL methods***.
 
+```go
     type J interface 
        to-string() ( string )
        dosomea ( x, J )
        dosomeb ( x, k ) (J) 
        dosomec ( x, a string) ( int )
+```
 
 If a struct *implements* such methods, it “satisfies the interface”.
 
@@ -18,16 +20,20 @@ You can create a “var of type interface” or declare a function param of type
 
 so `var x J-interface` internally is:
 
+```go
     c-struct interface-var
 		ITable            *ITable
 		concrete-value    any_union
+```
 
 an ITable is:
-  
+
+```go
     c-struct ITable
            concrete-type  *type
        	   interface-type *interface
            jmp-table[]    *function
+```
 
       
 When a concrete type is assigned to a interface-var, golang *creates a jmp-method table on the fly (and caches it). There is a jmp-table for each combination of J-Interface \* concrete-type-implementing-J-interface
@@ -36,7 +42,9 @@ Let’s assume z is struct Z and there is a bunch of functions as *func dosomex 
 
 When you do:
 
+```go
      var x J-interface  = z
+ ```
 
 golang *constructs the ITable on the fly*. The J-interface has 4 methods, so it needs to calculate x.ITable. Golang will search the method “to-string” of struct Z and put it in ITable.jmp-table[0], then look for “dosomea (struct Z)” and put it in ITable.jmp-table[1] and so on. Then it will store ITable->concrete = &struct-Z, and X.itable->interface= &interface-J”.  
 
@@ -44,9 +52,11 @@ x, being an *interface* type, has two 32bit pointers, the first will point to th
 
 then…
 
+```go
     for n:=1; n++<100 {
          print( x.dosomea(x))
     }
+```
 
 the call *x.dosomea()* is: 
 * x is var type interface -> struct Z, Interface J

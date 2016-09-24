@@ -8,6 +8,7 @@ A ***second-level method*** is a method which ***DO CALL *other methods* in the 
 
 Example, using structs-inheritance by embedding:
 
+```go
     package main
     
     import "fmt"
@@ -46,6 +47,7 @@ Example, using structs-inheritance by embedding:
     
     3 child simple called
     4 in complex, calling simple: parent simple called //2nd level method was called on base-class context
+```
      
 
 Here `func Simple` is a first-level method (do not call other struct methods)
@@ -56,6 +58,7 @@ Since all the inheritance hierarchy is made by embedding structs, the problem wi
 
 Now the example, but using interfaces:
 
+```go
     package main
     
     import "fmt"
@@ -100,6 +103,7 @@ Now the example, but using interfaces:
     2 in complex, calling simple:parent simple called
     3 child simple called
     4 in complex, calling simple:child simple called
+```
     
 Here `func Simple` is a first-level method (do not call other struct methods)
 and `func Complex` is a second-level method (do call other *interface* methods)
