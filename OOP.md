@@ -46,12 +46,14 @@ func (r Rectangle) Area() float64 {
 
 This can be read as (pseudo code):
 
-    class Rectangle
-      field name: string
-      field Width: float64
-      field Height: float64
-      method Area() //non-virtual
-         return this.Width * this.Height
+```go
+class Rectangle
+  field Name: string
+  field Width: float64
+  field Height: float64
+  method Area() //non-virtual
+     return this.Width * this.Height
+```
 
 ###Constructor
 
@@ -61,28 +63,29 @@ This can be read as (pseudo code):
 
 pseudo-code for the generic constructor:
 
-        function construct ( class,  literal)
+```go
+function construct ( class,  literal)
 
-          helper function assignFields ( object, literal)  //recursive
-            if type-of object is "object"
-                if literal has field-names
-                    for each field in object.fields
-                        if literal has-field field.name
-                            assignFields(field.value,  literal.fields[field.name].value) //recurse
-                else
-                //literal without names, assign by position
-                    for n=0 to object.fields.length
-                        assignFields(object.fields[n].value,  literal.fields[n].value) //recurse
-            else
-                //atom type
-                set object.value = literal.value
+  helper function assignFields ( object, literal)  //recursive
+    if type-of object is "object"
+        if literal has field-names
+            for each field in object.fields
+                if literal has-field field.name
+                    assignFields(field.value,  literal.fields[field.name].value) //recurse
+        else
+        //literal without names, assign by position
+            for n=0 to object.fields.length
+                assignFields(object.fields[n].value,  literal.fields[n].value) //recurse
+    else
+        //atom type
+        set object.value = literal.value
 
 
-        // generic constructor main body
-        var classInstance = new class
-        assignFields(classInstance, literal)
-        return classInstance
-
+// generic constructor main body
+var classInstance = new class
+assignFields(classInstance, literal)
+return classInstance
+```
 
 Constructors example:
 
@@ -199,21 +202,22 @@ func main() {
 
 This can be read: (pseudo code)
 
-    class NamedObj
-       field Name: string
+```go
+class NamedObj
+   field Name: string
 
-    class Shape
-       inherits NamedObj
-       field color: int32
-       field isRegular: bool
+class Shape
+   inherits NamedObj
+   field color: int32
+   field isRegular: bool
 
-    class Rectangle
-       inherits NamedObj
-       inherits Shape
-       field center: Point
-       field Width: float64
-       field Height: float64
-
+class Rectangle
+   inherits NamedObj
+   inherits Shape
+   field center: Point
+   field Width: float64
+   field Height: float64
+```
 
 Example:
 
@@ -316,13 +320,13 @@ type Rectangle struct {
 
 //override method show
 func (r Rectangle) show() {
-	Println("Rectangle ", r.name) // "r" is "this"
+	Println("Rectangle ", r.Name) // "r" is "this"
 }
-
 ```
 
   Pseudo-code:
 
+```go
       class NamedObj
          Name: string
 
@@ -336,6 +340,7 @@ func (r Rectangle) show() {
 
          method show //override
            print "Rectangle", this.Name
+```
 
 Using it:
 

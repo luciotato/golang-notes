@@ -6,6 +6,7 @@ you're defining and assigning the same var with different types on each case.
 
 Example from [go-wiki](https://code.google.com/p/go-wiki/wiki/Switch)
 
+```go
     func do(v interface{}) string {
             switch u := v.(type) {
             case int:
@@ -46,4 +47,5 @@ Example from [go-wiki](https://code.google.com/p/go-wiki/wiki/Switch)
                     return u.String() //call via method dispatch
             
        return "unknown"
+ ```
   

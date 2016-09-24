@@ -8,11 +8,13 @@
 
 usage:
 
+```go
     import "flag"
     var int_ptr = flag.Int("flagname", 1234, "help message for flagname")
 
     package flag  
     func Int(name string, value int, usage string) *int
+```
    
 - because they make all the assignments at the flags.Parse() function.
 
@@ -41,6 +43,7 @@ An interface value is nil only if the inner value and type are both unset, (nil,
 
 This situation can be confusing, and often arises when a nil value is stored inside an interface value such as an error return:
 
+```go
     func returnsError() error {
     	var p *MyError = nil
     	if bad() {
@@ -48,8 +51,11 @@ This situation can be confusing, and often arises when a nil value is stored ins
     	}
     	return p // Will always return a non-nil error.
     }
+```
     
 If all goes well, the function returns a nil p, so the return value is an error interface value holding (*MyError, nil). This means that if the caller compares the returned error to nil, it will always look as if there was an error even if nothing bad happened. To return a proper nil error to the caller, the function must return an explicit nil:
+
+```go
 
     func returnsError() error {
     	if bad() {
@@ -57,6 +63,7 @@ If all goes well, the function returns a nil p, so the return value is an error 
     	}
     	return nil
     }
+```
     
 It's a good idea for functions that return errors always to use the error type in their signature (as we did above) rather than a concrete type such as *MyError, to help guarantee the error is created correctly. As an example, os.Open returns an error even though, if not nil, it's always of concrete type *os.PathError.
 
