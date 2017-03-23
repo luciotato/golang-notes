@@ -1,8 +1,8 @@
-##Documents: (see files in this repository)
+## Documents: (see files in this repository)
 
 [Golang Struct and Interface from OOP concepts](OOP.md)
 
-##Loose questions
+## Loose questions
 
 **Why "flag" package returns pointers or require references?**
 
@@ -18,7 +18,7 @@ usage:
    
 - because they make all the assignments at the flags.Parse() function.
 
-##Gotchas
+## Gotchas
 
 **Interface**
 
