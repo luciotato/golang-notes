@@ -1,4 +1,4 @@
-###Type Switch
+### Type Switch
 
 A golang *Type Switch* has a lot of magic in it. 
 By using the create and assign syntax (*:=*) inside a *Type Switch*

@@ -1,18 +1,18 @@
-#Golang concepts from an OOP point of view
+# Golang concepts from an OOP point of view
 
-##Introduction
+## Introduction
 
-###Objectives of this document
+### Objectives of this document
 
 * Ease golang learning by associating golang-specific *concepts* with previously known concepts in the OOP field.
 
 * ***Promote golang usage*** by easing language understanding for people coming from a heavy OOP background
 
-###Why github?
+### Why github?
 This is a discovery process, I'm writing this document to help myself understand golang and maybe help others.
 This document is published in github. ***Pull requests are welcomed.***. There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
 
-##Golang Concepts
+## Golang Concepts
 Golang introduces words with a new golang-specific meaning, such as *struct* and *interface*.
 This is not bad, but sometimes it is nice to have a "translation" available to be able to understand golang-concepts by relating them to previously known concepts.
 
@@ -20,7 +20,7 @@ This is important in order to *understand* concepts of a new language.
 If you can *translate* a golang-word to previously known concepts,
 the learning is by far easier.
 
-##Cheat Sheet
+## Cheat Sheet
 
 |Golang|Classic OOP
 |----|-----|
@@ -29,7 +29,7 @@ the learning is by far easier.
 |*embedding*|multiple inheritance AND composition
 |*receiver*|implicit *this* parameter
 
-##Golang-struct is a class (non-virtual)
+## Golang-struct is a class (non-virtual)
 
 A ***golang-struct*** is a ***class*** with ***fields*** where all the methods are ***non-virtual***. e.g.:
 
@@ -55,7 +55,7 @@ class Rectangle
      return this.Width * this.Height
 ```
 
-###Constructor
+### Constructor
 
 - There is a *zero-value* defined for each core-type, so if you do not provide values at instantiation, all fields will have the zero-value
 
@@ -119,7 +119,7 @@ Output:
 ```
 
 
-##Golang "embedding" is akin to ***multiple inheritance with non-virtual methods***
+## Golang "embedding" is akin to ***multiple inheritance with non-virtual methods***
 
 By *embedding* a struct into another you have a mechanism similar to ***multiple inheritance with non-virtual members***.
 
@@ -162,7 +162,7 @@ It is important to note that all *inherited* methods **are called on the hidden-
 
 **When working with structs and embedding, everything is STATICALLY LINKED. All references are resolved at compile time.**
 
-###Multiple embedding
+### Multiple embedding
 
 ```go
 type NamedObj struct {
@@ -232,7 +232,7 @@ Example:
  - `aRect.NamedObj` and `aRect.Shape.NamedObj` are the same type, **but refer to different objects**
 
 
-###Method Shadowing
+### Method Shadowing
 
 Since all ***golang-struct*** methods are ***non-virtual***, ***you cannot override methods*** (you need *interfaces* for that)
 
@@ -282,7 +282,7 @@ func main() {
 }
 ```
 
-###Multiple inheritance and The Diamond Problem
+### Multiple inheritance and The Diamond Problem
 
 Golang solves [the diamond problem](https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem) by *not allowing diamonds*.
 
@@ -290,7 +290,7 @@ Since ***inheritance (embedded fields)*** include inherited field names in the *
 
 Note: Golang allows you to create a "Diamond" inheritance diagram, and only will complain when you try to access a parent's class field ambiguously.
 
-##Golang *methods* and ***"receivers" (this)***
+## Golang *methods* and ***"receivers" (this)***
 
 A golang ***struct-method*** is the same as a ***class non-virtual method*** but:
 
@@ -362,7 +362,7 @@ Hello I'm Richard
 - I'm a Rectangle named Richard
 ```
 
-##Structs vs Interfaces
+## Structs vs Interfaces
 
 A ***golang-Interface*** is ***a class with no fields and ONLY VIRTUAL methods***.
 
@@ -374,7 +374,7 @@ You have in Golang:
 
 By restricting *structs* to non-virtual methods, and  restricting *interfaces* to *all-virtual* methods and no fields. Both elements can be perfectly combined by *embedding* to create *fast* polymorphism and multiple inheritance *without the problems associated to multiple inheritance in classical OOP*
 
-##Interfaces
+## Interfaces
 
 A *golang-Interface* is a ***class, with NO fields, and ALL VIRTUAL methods***
 
@@ -384,7 +384,7 @@ Given this definition, you can use an interface to:
 - *implement* an interface, by declaring all the *interface virtual methods* in a *concrete class (a struct)*
 - *inherit(embed)* a golang-interface into another golang-interface
 
-###Declare a var/parameter with type interface
+### Declare a var/parameter with type interface
 
 By picturing an ***Interface*** as a ***class with no fields and only virtual abstract methods***, you can understand the advantages and limitations of *Interfaces*
 
@@ -402,7 +402,7 @@ When you declare a var/parameter with type interface:
 
 *Note on golang implementation*: The *ITables* used for method dispatch are constructed dynamically as needed and cached. Each *class(struct)* has one ITable for each *Interface* the *class(struct) implements*, so, if all *classes(structs)* implement all interfaces, there's a *ITable* for each *class(struct)*-*Interface* combination. See: [Go Data Structures: Interfaces](http://research.swtch.com/interfaces)
 
-####Examples from [How to use interfaces in Go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go) , with commented pseudo-code
+#### Examples from [How to use interfaces in Go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go) , with commented pseudo-code
 
 ```go
 package main
@@ -470,7 +470,7 @@ func main() {
 }
 ```
 
-###The empty Interface
+### The empty Interface
 
 By picturing an ***Interface*** as a ***class with no fields and only virtual abstract methods***, you can understand ***what*** the golang ***Empty Interface: "Interface{}"*** is.
 
@@ -506,7 +506,7 @@ That's why a *interface* hierarchy ***is always slower than structs***. When int
 Since all calls are made via method-dispatch, methods are executed on the context of the **actual instance**.
 
 
-##To be continued...
+## To be continued...
 
 Drafts:
  [Type Switch Internals](Type Switch Internals.md)
