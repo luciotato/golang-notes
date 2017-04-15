@@ -491,7 +491,7 @@ When you use ***only struct embedding*** to create a multi-root hierarchy, via m
 
 That's why a *struct* hierarchy ***is always faster***. When no interfaces are involved, the compiler ***knows*** exactly what concrete function to call, so all calls are direct calls resolved at compile time. Also the functions can be inlined.
 
-***The problem is with [second-level methods](second-level methods.md)***. You cannot alter the execution of a base-class second-level method, because all struct-methods are non-virtual.
+***The problem is with [second-level methods][1]***. You cannot alter the execution of a base-class second-level method, because all struct-methods are non-virtual.
 You will inherit fields and methods, but methods are always executed on the base-class context.
 
 **When working with structs and embedding, everything is STATICALLY LINKED. All references are resolved at compile time. There are no virtual methods in structs**
@@ -502,7 +502,7 @@ When you use ***only interface embedding*** to create a multi-root hierarchy, vi
 
 That's why a *interface* hierarchy ***is always slower than structs***. When interfaces are involved, the compiler ***does not know*** at compile time, what concrete function to call. It depends on the concrete content of the interface var/parameter, so all calls are ***resolved at run-time via method dispatch***. The mechanism is fast, but not as fast as compile-time resolved concrete calls. Also, with an interface-method call, since the concrete function to call is unknown until run-time, the call cannot be inlined.
 
-***The advantage of Interfaces is that: with [second-level methods](second-level methods.md)***. You can alter the execution of the base-interface second-level method, because all interface-methods are virtual.
+***The advantage of Interfaces is that: with [second-level methods][1]***. You can alter the execution of the base-interface second-level method, because all interface-methods are virtual.
 Since all calls are made via method-dispatch, methods are executed on the context of the **actual instance**.
 
 
@@ -510,3 +510,5 @@ Since all calls are made via method-dispatch, methods are executed on the contex
 
 Drafts:
  [Type Switch Internals](Type Switch Internals.md)
+
+[1]: second-level%20methods.md
