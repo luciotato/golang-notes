@@ -10,7 +10,7 @@
 
 ### Why github?
 This is a discovery process, I'm writing this document to help myself understand golang and maybe help others.
-This document is published in github. **_Pull requests are welcomed._**. There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
+This document is published in github. **_Pull requests are welcomed_**. There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
 
 ## Golang Concepts
 Golang introduces words with a new golang-specific meaning, such as *struct* and *interface*.
@@ -371,6 +371,7 @@ The *interface* in Golang is designed to complement *structs*. This is a very im
 
 You have in Golang:
 >**_Structs:_** classes, with fields, ALL NON-VIRTUAL methods
+
 >**_Interfaces:_** classes, with NO fields, ALL VIRTUAL methods
 
 By restricting *structs* to non-virtual methods, and  restricting *interfaces* to *all-virtual* methods and no fields. Both elements can be perfectly combined by *embedding* to create *fast* polymorphism and multiple inheritance *without the problems associated to multiple inheritance in classical OOP*
