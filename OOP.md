@@ -509,6 +509,6 @@ Since all calls are made via method-dispatch, methods are executed on the contex
 ## To be continued...
 
 Drafts:
- [Type Switch Internals](Type Switch Internals.md)
+ [Type Switch Internals](Type%20Switch%20Internals.md)
 
 [1]: second-level%20methods.md
