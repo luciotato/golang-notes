@@ -116,4 +116,4 @@ In the first call to 2nd-level `func complex`, internal call `simple` resolved t
 
 
 
-<p align=right><small> Written with [StackEdit](https://stackedit.io/).</small>
+<small><p align=right>Written with [StackEdit](https://stackedit.io/).</p></small>
