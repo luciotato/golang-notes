@@ -10,7 +10,7 @@
 
 ### Why github?
 This is a discovery process, I'm writing this document to help myself understand golang and maybe help others.
-This document is published in github. ***Pull requests are welcomed.***. There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
+This document is published in github. **_Pull requests are welcomed._**. There are a lot of things to improve, but please, please do not start a pull request with [*"Technically...*"](http://xkcd.com/1475)
 
 ## Golang Concepts
 Golang introduces words with a new golang-specific meaning, such as *struct* and *interface*.
@@ -286,7 +286,8 @@ func main() {
 
 Golang solves [the diamond problem](https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem) by *not allowing diamonds*.
 
-Since ***inheritance (embedded fields)*** include inherited field names in the ***inheriting class (struct)***, all *embedded* class-field-names *should not collide*. You must rename fields if there is a name collision. This rule avoids the diamond problem, by not allowing it.
+Since ***inheritance (embedded fields)*** include inherited field names in the **_inheriting
+class (struct)_**, all *embedded* class-field-names *should not collide*. You must rename fields if there is a name collision. This rule avoids the diamond problem, by not allowing it.
 
 Note: Golang allows you to create a "Diamond" inheritance diagram, and only will complain when you try to access a parent's class field ambiguously.
 
@@ -295,9 +296,9 @@ Note: Golang allows you to create a "Diamond" inheritance diagram, and only will
 A golang ***struct-method*** is the same as a ***class non-virtual method*** but:
 
 - It is defined *outside* of the ***class(struct)*** body
-- Since it is outside the class, it has an *extra section* before the method name to define the ***"receiver" (this)***.
+- Since it is outside the class, it has an *extra section* before the method name to define the **_"receiver" (this)_**.
 - The extra section defines ***this*** as an ***explicit parameter*** (The ***this/self*** parameter is implicit in most OOP languages).
-- Since there is such a special section to define ***this (receiver)***, you can also select a ***name*** for ***this/self***. Idiomatic golang is to use a short var name with the class initials. e.g.:
+- Since there is such a special section to define **_this (receiver)_**, you can also select a ***name*** for ***this/self***. Idiomatic golang is to use a short var name with the class initials. e.g.:
 
 Example
 
@@ -369,8 +370,8 @@ A ***golang-Interface*** is ***a class with no fields and ONLY VIRTUAL methods**
 The *interface* in Golang is designed to complement *structs*. This is a very important "symbiotic" relationship in golang. *Interface* fits perfectly with *structs*.
 
 You have in Golang:
->***Structs:  *** classes, with fields, ALL NON-VIRTUAL methods
->***Interfaces:  *** classes, with NO fields, ALL VIRTUAL methods
+>**_Structs:_** classes, with fields, ALL NON-VIRTUAL methods
+>**_Interfaces:_** classes, with NO fields, ALL VIRTUAL methods
 
 By restricting *structs* to non-virtual methods, and  restricting *interfaces* to *all-virtual* methods and no fields. Both elements can be perfectly combined by *embedding* to create *fast* polymorphism and multiple inheritance *without the problems associated to multiple inheritance in classical OOP*
 
@@ -491,7 +492,7 @@ When you use ***only struct embedding*** to create a multi-root hierarchy, via m
 
 That's why a *struct* hierarchy ***is always faster***. When no interfaces are involved, the compiler ***knows*** exactly what concrete function to call, so all calls are direct calls resolved at compile time. Also the functions can be inlined.
 
-***The problem is with [second-level methods][1]***. You cannot alter the execution of a base-class second-level method, because all struct-methods are non-virtual.
+**_The problem is with [second-level methods][1]_**. You cannot alter the execution of a base-class second-level method, because all struct-methods are non-virtual.
 You will inherit fields and methods, but methods are always executed on the base-class context.
 
 **When working with structs and embedding, everything is STATICALLY LINKED. All references are resolved at compile time. There are no virtual methods in structs**
@@ -502,7 +503,7 @@ When you use ***only interface embedding*** to create a multi-root hierarchy, vi
 
 That's why a *interface* hierarchy ***is always slower than structs***. When interfaces are involved, the compiler ***does not know*** at compile time, what concrete function to call. It depends on the concrete content of the interface var/parameter, so all calls are ***resolved at run-time via method dispatch***. The mechanism is fast, but not as fast as compile-time resolved concrete calls. Also, with an interface-method call, since the concrete function to call is unknown until run-time, the call cannot be inlined.
 
-***The advantage of Interfaces is that: with [second-level methods][1]***. You can alter the execution of the base-interface second-level method, because all interface-methods are virtual.
+**_The advantage of Interfaces is that: with [second-level methods][1]_**. You can alter the execution of the base-interface second-level method, because all interface-methods are virtual.
 Since all calls are made via method-dispatch, methods are executed on the context of the **actual instance**.
 
 
