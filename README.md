@@ -12,9 +12,13 @@ This is important in order to *understand* concepts of a new language.
 If you can *translate* a golang-word to previously known concepts,
 the learning is by far easier.
 
-## Documents:
+## Main Document: (start here)
 
-[Golang Struct and Interface from OOP concepts](OOP.md) (start here)
+[Golang Struct and Interface from OOP concepts](OOP.md) 
+
+## Other Documents
+
+[Gotchas](gotchas.md)
 
 [Method Dispatch - Low Level Detail](Method%20Dispatch%20-%20Low%20Level%20Detail.md)
 
@@ -22,6 +26,5 @@ the learning is by far easier.
 
 [Second-Level Methods](second-level%20methods.md)
 
-[Gotchas](gotchas.md)
  
 
