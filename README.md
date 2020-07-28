@@ -1,4 +1,4 @@
-### Objectives of this repository
+## Objectives of this repository
 
 * Ease golang learning by associating golang-specific *concepts* with previously known concepts in the OOP field.
 
