@@ -350,17 +350,16 @@ func main() {
 	var a = NamedObj{"Joe"}
 	var b = Rectangle{NamedObj{"Richard"}, 10, 20}
 
-	a.show("Hello")
-	b.show("Hello")
+	a.show()
+	b.show()
 }
 ```
 
 Output:
 
 ```
-Hello I'm Joe
-Hello I'm Richard
-- I'm a Rectangle named Richard
+Joe
+Rectangle  Richard
 ```
 
 ## Structs vs Interfaces
